@@ -11,21 +11,22 @@
 }
 
 body, section {
-    height: 100dvh;
+    height: 85dvh;
     display: flex;
     flex-direction: column;
     background-color: var(--primary);
     align-items: center;
+    justify-content: center;
 }
 
 #welcome-slide-container {
-    border: solid 1px;
     width: 80dvw;
     text-align: center;
     overflow: hidden;
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    scrollbar-width: none;
 }
 
 .welcome-slide {
