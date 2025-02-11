@@ -1,0 +1,11 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif, monospace;
+}
+
+:root {
+    --primary: #d9ead3;
+    --secondary: #124f5c;
+    --title-colour: rgb(92, 92, 92);
+}
