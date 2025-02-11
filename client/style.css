@@ -1,0 +1,84 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif, monospace;
+}
+
+:root {
+    --primary: #d9ead3;
+    --secondary: #124f5c;
+    --title-colour: rgb(92, 92, 92);
+}
+
+body, section {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--primary);
+    align-items: center;
+}
+
+#welcome-slide-container {
+    border: solid 1px;
+    width: 80dvw;
+    text-align: center;
+    overflow: hidden;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+}
+
+.welcome-slide {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: calc(100% - 4rem);
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    padding: 2rem;
+}
+
+.welcome-slide > h1 {
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    font-family: pacifico;
+    color: var(--title-colour);
+}
+
+.welcome-slide > h1 > span:first-child {
+    font-size: 15px;
+    font-family: pacifico;
+    color: var(--title-colour);
+}
+
+.welcome-slide > h1 > span:last-child {
+    font-size: 40px;
+    font-family: pacifico;
+    color: var(--title-colour);
+    line-height: 20px;
+}
+
+#welcome-page > button {
+    padding: 1rem;
+    background-color: var(--secondary);
+    color: rgb(218, 218, 218);
+    border: 0px;
+    border-radius: 10px;
+    width: 12rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: 0.2s;
+    position: absolute;
+    bottom: 20dvh;
+}
+
+#welcome-page > button:hover {
+    /* background-color: #08171a; */
+}
+
+#welcome-page > button:active {
+    background-color: #153339;
+}
