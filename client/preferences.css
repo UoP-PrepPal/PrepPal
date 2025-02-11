@@ -1,0 +1,40 @@
+:root {
+    --primary: #d9ead3;
+    --secondary: #124f5c;
+    --title-colour: rgb(92, 92, 92);
+}
+
+body, section {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--primary);
+    align-items: center;
+}
+
+.title{
+    display: flex;
+    flex-direction: column;
+    font-family: pacifico;
+    color: var(--title-colour);
+}
+
+.checkbox-group{
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif, monospace;
+}
+
+.submit-preferences{
+    padding: 1rem;
+    background-color: var(--secondary);
+    color: rgb(218, 218, 218);
+    border: 0px;
+    border-radius: 10px;
+    width: 12rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: 0.2s;
+    position: absolute;
+    bottom: 20dvh;
+}
