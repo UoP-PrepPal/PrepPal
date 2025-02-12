@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+body {
+    background-color: #d9ead3;
+    font-family: 'sans-serif';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+:root {
+    --primary: #d9ead3;
+    --secondary: #124f5c;
+    --title-colour: rgb(92, 92, 92);
+}
+
+.iphone {
+    width: 375px;
+    height: 667px;
+    background: #000;
+    border-radius: 36px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.screen {
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary);
+    border-radius: 30px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+}
+
+.signup-box {
+    width: 100%;
+    text-align: center;
+}
+
+.signup-box h1 {
+    font-family: 'Pacifico', cursive; /* Changed to Pacifico font */
+}
+
+.textbox input,
+.btn {
+    font-family: 'sans-serif';
+}
+
+.textbox {
+    margin-bottom: 15px;
+    text-align: left;
+    position: relative;
+}
+
+.textbox label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-family: 'sans-serif';
+}
+
+.textbox input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: 'sans-serif';
+}
+
+.textbox input::placeholder {
+    font-family: 'sans-serif';
+}
+
+.password-requirements {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8em;
+    color: #666;
+    text-align: left;
+    margin-bottom: 15px; /* Add margin to separate from the next input box */
+}
+
+.btn {
+    width: auto; /* Make the button width auto */
+    padding: 10px 20px; /* Add padding for better appearance */
+    background-color: #00008B; /* Changed to dark blue */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.2em; /* Increased font size */
+    position: absolute;
+    bottom: 20px; /* Position the button at the bottom */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.btn:hover {
+    background-color: #000066; /* Darker shade of dark blue */
+}

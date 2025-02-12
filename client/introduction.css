@@ -108,9 +108,9 @@ body, section {
     text-decoration: none;
 }
 
-/* #welcome-page > a:hover {
-    background-color: #76a3ac;
-} */
+#welcome-page > button:hover {
+    /* background-color: #08171a; */
+}
 
 #welcome-page > a:active {
     background-color: #153339;
