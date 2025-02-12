@@ -27,6 +27,7 @@ body, section {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    scroll-behavior: smooth;
 }
 
 .welcome-slide {
@@ -60,6 +61,29 @@ body, section {
     font-family: pacifico;
     color: var(--title-colour);
     line-height: 20px;
+}
+
+#progress-dots {
+    display: flex;
+    gap: 1rem;
+}
+
+#progress-dots > a {
+    width: 1px;
+    height: 1px;
+    padding: .4rem;
+    border-radius: 50%;
+    background-color: black;
+    border: 1px black solid;
+    transition: .2s;
+}
+
+#progress-dots > a:active {
+    background-color: var(--secondary);
+}
+
+#progress-dots > a::after {
+    background-color: var(--secondary);
 }
 
 #welcome-page > button {
