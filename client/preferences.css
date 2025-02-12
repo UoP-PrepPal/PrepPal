@@ -38,3 +38,35 @@ body, section {
     position: absolute;
     bottom: 20dvh;
 }
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.diet-button {
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+    letter-spacing: 1px;
+    width: 200px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.diet-button:hover {
+    background-color: var(--secondary);
+    color: white;
+    transform: scale(1.05);
+}
+
+.submit-preferences:hover{
+    background-color: white;;
+    color: black;
+    transform: scale(1.05);
+}
+
