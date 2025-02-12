@@ -63,3 +63,39 @@ CREATE TABLE recipes (
     image VARCHAR(50) NOT NULL,
     date_added DATE NOT NULL DEFAULT current_date
 );
+
+CREATE TABLE categories (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(30) NOT NULL UNIQUE,
+    description VARCHAR(127)
+);
+
+CREATE TABLE recipe_categories (
+    recipe_id INT NOT NULL REFERENCES (recipes.recipe_id),
+    category_id INT NOT NULL REFERENCES (categories.category_id),
+    PRIMARY KEY (recipe_id, category_id)
+);
+
+CREATE TABLE ingredients (
+    ingredient_id SERIAL PRIMARY KEY,
+    name VARCHAR(20) NOT NULL,
+    description VARCHAR(63) NOT NULL
+);
+
+CREATE TABLE recipe_ingredients (
+    recipe_id INT NOT NULL REFERENCES (recipes.recipe_id),
+    ingredient_id INT NOT NULL REFERENCES (ingredients.ingredient_id),
+    PRIMARY KEY (recipe_id, ingredient_id),
+    unit VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE allergies (
+    allergy_id SERIAL PRIMARY KEY,
+    name VARCHAR(20) NOT NULL UNIQUE,
+    description VARCHAR(63)
+);
+
+CREATE TABLE ingredient_allergens (
+    ingredient_id INT NOT NULL REFERENCES (ingredients.ingredient_id),
+    allergy_id INT NOT NULL REFERENCES (allergies.allergy_id)
+);
