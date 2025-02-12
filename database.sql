@@ -143,3 +143,4 @@ CREATE TABLE ingredient_allergens (
     ingredient_id INT NOT NULL REFERENCES ingredients(ingredient_id),
     allergy_id INT NOT NULL REFERENCES allergies(allergy_id)
 );
+-- i love derek
