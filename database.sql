@@ -25,3 +25,15 @@ Entities:
 - recipe-categories
 
 */
+
+CREATE TABLE Users (
+    user_id SERIAL, 
+    username varchar(20) NOT NULL UNIQUE, 
+    email varchar(100) NOT NULL UNIQUE,
+    first_name varchar(20),
+    last_name varchar(20),
+    -- password_hash NOT NULL,
+    created_at DATE DEFAULT current_date,
+    profile_picture VARCHAR(50), 
+    PRIMARY KEY (user_id)
+)
