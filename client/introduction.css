@@ -76,7 +76,7 @@ body, section {
 }
 
 #welcome-page > button:hover {
-    /* background-color: #08171a; */
+    background-color: #08171a;
 }
 
 #welcome-page > button:active {
