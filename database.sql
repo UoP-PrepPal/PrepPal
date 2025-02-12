@@ -28,7 +28,7 @@ Entities:
 
 CREATE TYPE statuses AS ENUM ('Requested', 'Accepted', 'Blocked');
 
-CREATE TABLE Users (
+CREATE TABLE users (
     user_id SERIAL, 
     username varchar(20) NOT NULL UNIQUE, 
     email varchar(100) NOT NULL UNIQUE,
@@ -40,7 +40,7 @@ CREATE TABLE Users (
     PRIMARY KEY (user_id)
 );
 
-CREATE TABLE Friends (
+CREATE TABLE friends (
     friendship_id SERIAL,
     user_id int NOT NULL,
     friend_id int NOT NULL,
@@ -49,19 +49,29 @@ CREATE TABLE Friends (
     accepted_at DATE,
     blocked_at DATE,
     PRIMARY KEY (friendship_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (friend_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (friend_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE recipes (
     recipe_id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES (users.user_id),
+    user_id INT NOT NULL REFERENCES users(user_id),
     name VARCHAR(30) NOT NULL,
     description VARCHAR(255),
     instructions VARCHAR(1023) NOT NULL,
     est_time_min SMALLINT NOT NULL,
     image VARCHAR(50) NOT NULL,
     date_added DATE NOT NULL DEFAULT current_date
+);
+
+CREATE TABLE ratings (
+    rating_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(user_id),
+    recipe_id INT NOT NULL REFERENCES recipes(recipe_id),
+    rating SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 10),
+    comments VARCHAR(127),
+    date_added DATE NOT NULL DEFAULT current_date,
+    edited_at DATE
 );
 
 CREATE TABLE categories (
@@ -71,8 +81,8 @@ CREATE TABLE categories (
 );
 
 CREATE TABLE recipe_categories (
-    recipe_id INT NOT NULL REFERENCES (recipes.recipe_id),
-    category_id INT NOT NULL REFERENCES (categories.category_id),
+    recipe_id INT NOT NULL REFERENCES recipes(recipe_id),
+    category_id INT NOT NULL REFERENCES categories(category_id),
     PRIMARY KEY (recipe_id, category_id)
 );
 
@@ -83,8 +93,8 @@ CREATE TABLE ingredients (
 );
 
 CREATE TABLE recipe_ingredients (
-    recipe_id INT NOT NULL REFERENCES (recipes.recipe_id),
-    ingredient_id INT NOT NULL REFERENCES (ingredients.ingredient_id),
+    recipe_id INT NOT NULL REFERENCES recipes(recipe_id),
+    ingredient_id INT NOT NULL REFERENCES ingredients(ingredient_id),
     PRIMARY KEY (recipe_id, ingredient_id),
     unit VARCHAR(10) NOT NULL
 );
@@ -96,6 +106,6 @@ CREATE TABLE allergies (
 );
 
 CREATE TABLE ingredient_allergens (
-    ingredient_id INT NOT NULL REFERENCES (ingredients.ingredient_id),
-    allergy_id INT NOT NULL REFERENCES (allergies.allergy_id)
+    ingredient_id INT NOT NULL REFERENCES ingredients(ingredient_id),
+    allergy_id INT NOT NULL REFERENCES allergies(allergy_id)
 );
