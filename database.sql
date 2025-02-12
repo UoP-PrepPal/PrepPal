@@ -26,7 +26,7 @@ Entities:
 
 */
 
-CREATE TYPE statuses AS ENUM ('Online', 'Offline');
+CREATE TYPE statuses AS ENUM ('Requested', 'Accepted', 'Blocked');
 
 CREATE TABLE Users (
     user_id SERIAL, 
@@ -35,7 +35,7 @@ CREATE TABLE Users (
     first_name varchar(20),
     last_name varchar(20),
     -- password_hash NOT NULL,
-    created_at DATE DEFAULT current_date,
+    created_at DATE NOT NULL DEFAULT current_date,
     profile_picture VARCHAR(50), 
     PRIMARY KEY (user_id)
 );
@@ -51,4 +51,15 @@ CREATE TABLE Friends (
     PRIMARY KEY (friendship_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (friend_id) REFERENCES Users(user_id)
+);
+
+CREATE TABLE recipes (
+    recipe_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES (users.user_id),
+    name VARCHAR(30) NOT NULL,
+    description VARCHAR(255),
+    instructions VARCHAR(1023) NOT NULL,
+    est_time_min SMALLINT NOT NULL,
+    image VARCHAR(50) NOT NULL,
+    date_added DATE NOT NULL DEFAULT current_date
 );
