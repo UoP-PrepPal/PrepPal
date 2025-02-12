@@ -37,6 +37,7 @@ body, section {
     transition: 0.2s;
     position: absolute;
     bottom: 20dvh;
+    border: 2px solid black;
 }
 
 .button-group {
@@ -56,6 +57,7 @@ body, section {
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    border: 2px solid black;
 }
 
 .diet-button:hover {
@@ -70,3 +72,14 @@ body, section {
     transform: scale(1.05);
 }
 
+.diet-button:active {
+    transform: scale(1.05);
+    box-shadow: none;
+    background-color: white;
+  }
+
+  .submit-preferences:active{
+    transform: scale(1.05);
+    box-shadow: none;
+    background-color: var(--secondary);
+  }
