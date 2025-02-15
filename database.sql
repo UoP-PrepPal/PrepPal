@@ -66,7 +66,7 @@ CREATE TABLE recipes (
 
 CREATE TABLE preferences (
     preference_id SERIAL,
-    name VARCHAR(20) NOT NULL UNQIUE,
+    name VARCHAR(20) NOT NULL UNIQUE,
     description VARCHAR(255) NOT NULL,
     PRIMARY KEY (preference_id)
 );
