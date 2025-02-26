@@ -89,7 +89,7 @@ CREATE TABLE recipe_categories (
 CREATE TABLE ingredients (
     ingredient_id SERIAL PRIMARY KEY,
     name VARCHAR(20) NOT NULL,
-    description VARCHAR(63) NOT NULL
+    description VARCHAR(63)
 );
 
 CREATE TABLE recipe_ingredients (
@@ -115,4 +115,20 @@ CREATE TABLE allergies (
 CREATE TABLE ingredient_allergens (
     ingredient_id INT NOT NULL REFERENCES ingredients(ingredient_id),
     allergy_id INT NOT NULL REFERENCES allergies(allergy_id)
+);
+
+CREATE VIEW ingredients_info AS (   -- e.g. SELECT * FROM ingredients_info WHERE "Recipe" = 1;
+    SELECT
+        r.recipe_id AS "Recipe",
+        i.name AS "Ingredient",
+        ri.unit AS "Amount",
+        INITCAP(STRING_AGG(a.name, ', ' ORDER BY a.name)) AS "Allergens"
+    FROM
+        ingredients i
+        JOIN recipe_ingredients ri USING (ingredient_id)
+        JOIN recipes r USING (recipe_id)
+        JOIN ingredient_allergens ia ON i.ingredient_id = ia.ingredient_id
+        JOIN allergies a USING (allergy_id)
+    GROUP BY i.name, r.recipe_id, ri.unit
+    ORDER BY r.recipe_id, i.name
 );
