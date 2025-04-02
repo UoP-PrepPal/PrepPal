@@ -14,6 +14,9 @@
         <label for="recipe-name">Recipe Name:</label>
         <input type="text" id="recipe-name" placeholder="Enter recipe name">
 
+        <label for="recipe-description">Recipe Description:</label>
+        <input type="text" id="recipe-description" placeholder="Enter recipe description">
+
         <label for="recipe-image">Upload an Image (Optional):</label>
         <input type="file" id="recipe-image" accept="image/*" onchange="previewImage()">
         <img id="image-preview" class="hidden" />
@@ -35,13 +38,13 @@
         <div class="ingredients-section">
             <label for="ingredient">Ingredient:</label>
             <input type="text" id="ingredient" placeholder="Enter an ingredient">
-            <button>Add Ingredient</button>
+            <button id="add-ingredient">Add Ingredient</button>
         </div>
 
         <ul id="ingredient-list"></ul>
 
-        <button class="save-btn">Save Recipe</button>
+        <button id="save-btn">Save Recipe</button>
     </div>
-
+    <script src="index.js"></script>
 </body>
 </html>
