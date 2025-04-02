@@ -26,97 +26,124 @@ Entities:
 
 */
 
-CREATE TYPE statuses AS ENUM ('Requested', 'Accepted', 'Blocked');
+-- SQLite version of the database schema
 
-CREATE TABLE users (
-    user_id SERIAL, 
-    username varchar(20) NOT NULL UNIQUE, 
-    email varchar(100) NOT NULL UNIQUE,
-    first_name varchar(20),
-    last_name varchar(20),
-    -- password_hash NOT NULL,
-    created_at DATE NOT NULL DEFAULT current_date,
-    profile_picture VARCHAR(50), 
-    PRIMARY KEY (user_id)
+-- Create statuses table (replacing ENUM with TEXT)
+CREATE TABLE statuses (
+    status_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    status TEXT NOT NULL UNIQUE
 );
 
+-- Insert values for statuses
+INSERT INTO statuses (status) VALUES ('Requested');
+INSERT INTO statuses (status) VALUES ('Accepted');
+INSERT INTO statuses (status) VALUES ('Blocked');
+
+-- Create users table
+CREATE TABLE users (
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    first_name TEXT,
+    last_name TEXT,
+    created_at DATE NOT NULL DEFAULT current_date,
+    profile_picture TEXT
+);
+
+-- Create friends table
 CREATE TABLE friends (
-    friendship_id SERIAL,
-    user_id int NOT NULL,
-    friend_id int NOT NULL,
-    friend_status statuses NOT NULL,
+    friendship_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    friend_id INTEGER NOT NULL,
+    friend_status INTEGER NOT NULL,  -- Changed to INTEGER referring to statuses
     requested_at DATE DEFAULT current_date,
     accepted_at DATE,
     blocked_at DATE,
-    PRIMARY KEY (friendship_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (friend_id) REFERENCES users(user_id)
+    FOREIGN KEY (friend_id) REFERENCES users(user_id),
+    FOREIGN KEY (friend_status) REFERENCES statuses(status_id)
 );
 
+-- Create recipes table
 CREATE TABLE recipes (
-    recipe_id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES users(user_id),
-    name VARCHAR(30) NOT NULL,
-    description VARCHAR(255),
-    instructions VARCHAR(1023) NOT NULL,
-    est_time_min SMALLINT NOT NULL,
-    image VARCHAR(50) NOT NULL,
-    ingredients VARCHAR(1000),
-    date_added DATE NOT NULL DEFAULT current_date
-);
-
-CREATE TABLE ratings (
-    rating_id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES users(user_id),
-    recipe_id INT NOT NULL REFERENCES recipes(recipe_id),
-    rating SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 10),
-    comments VARCHAR(127),
+    recipe_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT,
+    instructions TEXT NOT NULL,
+    est_time_min INTEGER NOT NULL,
+    image TEXT NOT NULL,
+    ingredients TEXT,
     date_added DATE NOT NULL DEFAULT current_date,
-    edited_at DATE
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
+-- Create ratings table
+CREATE TABLE ratings (
+    rating_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    recipe_id INTEGER NOT NULL,
+    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 10),
+    comments TEXT,
+    date_added DATE NOT NULL DEFAULT current_date,
+    edited_at DATE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
+);
+
+-- Create categories table
 CREATE TABLE categories (
-    category_id SERIAL PRIMARY KEY,
-    name VARCHAR(30) NOT NULL UNIQUE,
-    description VARCHAR(127)
+    category_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT
 );
 
+-- Create recipe_categories table (many-to-many relationship)
 CREATE TABLE recipe_categories (
-    recipe_id INT NOT NULL REFERENCES recipes(recipe_id),
-    category_id INT NOT NULL REFERENCES categories(category_id),
-    PRIMARY KEY (recipe_id, category_id)
+    recipe_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    PRIMARY KEY (recipe_id, category_id),
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id),
+    FOREIGN KEY (category_id) REFERENCES categories(category_id)
 );
 
+-- Create favourites table
 CREATE TABLE favourites (
-    user_id int NOT NULL REFERENCES Users(user_id),
-    recipe_id int NOT NULL REFERENCES recipes(recipe_id),
+    user_id INTEGER NOT NULL,
+    recipe_id INTEGER NOT NULL,
     PRIMARY KEY (user_id, recipe_id),
-    date_added DATE DEFAULT CURRENT_DATE
-)
+    date_added DATE DEFAULT CURRENT_DATE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
+);
 
+-- Create allergies table
 CREATE TABLE allergies (
-    allergy_id SERIAL PRIMARY KEY,
-    name VARCHAR(20) NOT NULL UNIQUE,
-    description VARCHAR(63)
+    allergy_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT
 );
 
+-- Create ingredient_allergens table (many-to-many relationship)
 CREATE TABLE ingredient_allergens (
-    ingredient_id INT NOT NULL REFERENCES ingredients(ingredient_id),
-    allergy_id INT NOT NULL REFERENCES allergies(allergy_id)
+    ingredient_id INTEGER NOT NULL,
+    allergy_id INTEGER NOT NULL,
+    FOREIGN KEY (ingredient_id) REFERENCES ingredients(ingredient_id),
+    FOREIGN KEY (allergy_id) REFERENCES allergies(allergy_id)
 );
 
-CREATE VIEW ingredients_info AS (   -- e.g. SELECT * FROM ingredients_info WHERE "Recipe" = 1;
-    SELECT
-        r.recipe_id AS "Recipe",
-        i.name AS "Ingredient",
-        ri.unit AS "Amount",
-        INITCAP(STRING_AGG(a.name, ', ' ORDER BY a.name)) AS "Allergens"
-    FROM
-        ingredients i
-        JOIN recipe_ingredients ri USING (ingredient_id)
-        JOIN recipes r USING (recipe_id)
-        JOIN ingredient_allergens ia ON i.ingredient_id = ia.ingredient_id
-        JOIN allergies a USING (allergy_id)
-    GROUP BY i.name, r.recipe_id, ri.unit
-    ORDER BY r.recipe_id, i.name
-);
+-- View to gather ingredients and allergens for recipes
+CREATE VIEW ingredients_info AS
+SELECT
+    r.recipe_id AS "Recipe",
+    i.name AS "Ingredient",
+    ri.unit AS "Amount",
+    GROUP_CONCAT(a.name, ', ') AS "Allergens"
+FROM
+    ingredients i
+    JOIN recipe_ingredients ri USING (ingredient_id)
+    JOIN recipes r USING (recipe_id)
+    JOIN ingredient_allergens ia ON i.ingredient_id = ia.ingredient_id
+    JOIN allergies a USING (allergy_id)
+GROUP BY r.recipe_id, i.name, ri.unit
+ORDER BY r.recipe_id, i.name;
