@@ -61,6 +61,7 @@ CREATE TABLE recipes (
     instructions VARCHAR(1023) NOT NULL,
     est_time_min SMALLINT NOT NULL,
     image VARCHAR(50) NOT NULL,
+    ingredients VARCHAR(1000),
     date_added DATE NOT NULL DEFAULT current_date
 );
 
@@ -84,19 +85,6 @@ CREATE TABLE recipe_categories (
     recipe_id INT NOT NULL REFERENCES recipes(recipe_id),
     category_id INT NOT NULL REFERENCES categories(category_id),
     PRIMARY KEY (recipe_id, category_id)
-);
-
-CREATE TABLE ingredients (
-    ingredient_id SERIAL PRIMARY KEY,
-    name VARCHAR(20) NOT NULL,
-    description VARCHAR(63)
-);
-
-CREATE TABLE recipe_ingredients (
-    recipe_id INT NOT NULL REFERENCES recipes(recipe_id),
-    ingredient_id INT NOT NULL REFERENCES ingredients(ingredient_id),
-    PRIMARY KEY (recipe_id, ingredient_id),
-    unit VARCHAR(10) NOT NULL
 );
 
 CREATE TABLE favourites (
