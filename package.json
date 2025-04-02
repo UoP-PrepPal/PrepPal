@@ -1,0 +1,23 @@
+{
+  "name": "preppal",
+  "version": "1.0.0",
+  "description": "PrepPal Recipe App for Software Engineering Theory and Practice",
+  "homepage": "https://github.com/UoP-PrepPal/PrepPal#readme",
+  "bugs": {
+    "url": "https://github.com/UoP-PrepPal/PrepPal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UoP-PrepPal/PrepPal.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "svr.js",
+  "scripts": {
+    "test": "run"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
