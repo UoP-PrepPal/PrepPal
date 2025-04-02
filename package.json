@@ -15,7 +15,8 @@
   "type": "module",
   "main": "svr.js",
   "scripts": {
-    "test": "run"
+    "test": "run",
+    "start": "node svr.js"
   },
   "dependencies": {
     "express": "^5.1.0",

@@ -11,7 +11,6 @@ const dbPromise = open({
   driver: sqlite3.Database,
 });
 
-// Middleware
 app.use(express.json());
 app.use(express.static('client'));
 
