@@ -112,7 +112,6 @@ CREATE TABLE favourites (
     user_id INTEGER NOT NULL,
     recipe_id INTEGER NOT NULL,
     PRIMARY KEY (user_id, recipe_id),
-    date_added DATE DEFAULT CURRENT_DATE,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
