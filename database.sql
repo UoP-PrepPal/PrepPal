@@ -72,7 +72,6 @@ CREATE TABLE recipes (
     description TEXT,
     instructions TEXT NOT NULL,
     est_time_min INTEGER NOT NULL,
-    image TEXT NOT NULL,
     ingredients TEXT,
     date_added DATE NOT NULL DEFAULT current_date,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
