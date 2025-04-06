@@ -44,6 +44,38 @@ app.post('/recipes', async (req, res) => {
   }
 });
 
+app.post('/signup', async (req, res) => {
+  try {
+    console.log('Request Body: ', req.body);
+    const { username, email, first_name, last_name } = req.body;
+
+    const missingFields = [];
+
+    if (!username) missingFields.push('username');
+    if (!email) missingFields.push('email');
+    if (!first_name) missingFields.push('first_name');
+    if (!last_name) missingFields.push('last_name');
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({ error: `Missing required fields: ${missingFields.join(', ')}` });
+    }
+
+    const db = await dbPromise;
+    const result = await db.run(
+      `INSERT INTO users (username, email, first_name, last_name)
+      VALUES (?, ?, ?, ?)`,
+      [username, email, first_name, last_name]
+    );
+
+    res.status(201).json({
+      message: 'User added successfully',
+      id: result.lastInsertRowid,
+    });
+  } catch (error) {
+    console.log('Error adding user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 app.get('/recipes', async (req, res) => {

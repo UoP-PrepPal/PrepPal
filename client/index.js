@@ -69,15 +69,15 @@ function createAccount(){
     const userData = {
         username: usernameInput.value.trim(),
         email: emailInput.value.trim(),
-        firstName: firstNameInput.value.trim(),
-        lastName: lastNameInput.value.trim()
+        first_name: firstNameInput.value.trim(),
+        last_name: lastNameInput.value.trim()
     }
 
     console.log('User Data: ', userData);
 
     fetch('/signup', {
         method: 'POST',
-        header: {
+        headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData),
@@ -87,13 +87,14 @@ function createAccount(){
         if (data.error) {
             console.error('Error:', data.error);
         } else {
-            console.log('Recipe saved successfully:', data);
+            console.log('User account created successfully:', data);
         }
     })
     .catch(error => {
-        console.error('Error saving recipe:', error);
+        console.error('Error creating account:', error);
     });
 }
+
 
 if (addIngredientBtn) {
     addIngredientBtn.addEventListener('click', addIngredient);
