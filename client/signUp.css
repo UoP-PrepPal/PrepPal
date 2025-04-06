@@ -1,13 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-
-body {
-    background-color: #d9ead3;
-    font-family: 'sans-serif';
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+* {
     margin: 0;
+    padding: 0;
+    font-family: "Inter", sans-serif, monospace;
 }
 
 :root {
@@ -16,96 +10,75 @@ body {
     --title-colour: rgb(92, 92, 92);
 }
 
-.iphone {
-    width: 375px;
-    height: 667px;
-    background: #000;
-    border-radius: 36px;
-    padding: 20px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+body {
+    min-height: 100dvh;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: var(--primary);
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
-.screen {
+.signup-container {
     width: 100%;
-    height: 100%;
-    background-color: var(--primary);
-    border-radius: 30px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    position: relative;
+    max-width: 450px;
+    padding: 2rem;
 }
 
 .signup-box {
-    width: 100%;
-    text-align: center;
+    background-color: white;
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
 }
 
 .signup-box h1 {
-    font-family: 'Pacifico', cursive; /* Changed to Pacifico font */
-}
-
-.textbox input,
-.btn {
-    font-family: 'sans-serif';
+    text-align: center;
+    color: var(--title-colour);
+    font-size: 2rem;
 }
 
 .textbox {
-    margin-bottom: 15px;
-    text-align: left;
-    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .textbox label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-family: 'sans-serif';
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+    font-size: 0.95rem;
 }
 
 .textbox input {
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-    font-family: 'sans-serif';
-}
-
-.textbox input::placeholder {
-    font-family: 'sans-serif';
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 1rem;
 }
 
 .password-requirements {
-    display: block;
-    margin-top: 5px;
-    font-size: 0.8em;
-    color: #666;
-    text-align: left;
-    margin-bottom: 15px; /* Add margin to separate from the next input box */
+    font-size: 0.8rem;
+    color: gray;
+    margin-top: 0.5rem;
+    line-height: 1.4;
 }
 
 .btn {
-    width: auto; /* Make the button width auto */
-    padding: 10px 20px; /* Add padding for better appearance */
-    background-color: #00008B; /* Changed to dark blue */
+    padding: 0.75rem;
+    background-color: var(--secondary);
     color: white;
+    font-weight: 600;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    font-size: 1.2em; /* Increased font size */
-    position: absolute;
-    bottom: 20px; /* Position the button at the bottom */
-    left: 50%;
-    transform: translateX(-50%);
+    transition: background-color 0.2s ease;
+    letter-spacing: 1px;
 }
 
 .btn:hover {
-    background-color: #000066; /* Darker shade of dark blue */
+    background-color: #0c3b45;
 }
