@@ -10,29 +10,29 @@
     <div class="signup-container">
         <div class="signup-box">
             <h1>Sign up</h1>
-            <div class="textbox">
-                <label for="email">Email address</label>
-                <input type="email" id="email" name="email" placeholder="Type your email address" />
-            </div>
+
             <div class="textbox">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" placeholder="Type your username" />
             </div>
+
             <div class="textbox">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Type your password" />
-                <small class="password-requirements">
-                    Password must have at least:<br />
-                    1 letter<br />
-                    1 number<br />
-                    1 special
-                </small>
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" placeholder="Type your email address" />
             </div>
-            <div class="textbox">
-                <label for="retype-password">Re-type Password</label>
-                <input type="password" id="retype-password" name="retype-password" placeholder="Re-type your password" />
+
+            <div class="name-row">
+                <div class="textbox">
+                    <label for="first-name">First Name</label>
+                    <input type="text" id="first-name" name="first-name" placeholder="Type your first name" />
+                </div>
+                <div class="textbox">
+                    <label for="last-name">Last Name</label>
+                    <input type="text" id="last-name" name="last-name" placeholder="Type your last name" />
+                </div>
             </div>
-            <input type="submit" class="btn" value="Create Account" />
+
+            <input type="submit" id="create-account" class="btn" value="Create Account" />
         </div>
     </div>
 </body>

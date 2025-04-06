@@ -2,6 +2,13 @@ const saveBtn = document.querySelector('#save-btn');
 const ingredientInput = document.querySelector('#ingredient');
 const addIngredientBtn = document.querySelector('#add-ingredient');
 const ingredientList = document.querySelector('#ingredient-list');
+const emailInput = document.querySelector('#email');
+const usernameInput = document.querySelector('#username');
+const password = document.querySelector('#password');
+const retypedPassword = document.querySelector('#retype-password');
+const createAccountBtn = document.querySelector('#create-account');
+const firstNameInput = document.querySelector('#first-name');
+const lastNameInput = document.querySelector('last-name');
 
 function addIngredient() {
     const ingredientValue = ingredientInput.value.trim(); 
@@ -58,6 +65,10 @@ function saveRecipe() {
     });
 }
 
+function createAccount(){
+    
+}
 
 addIngredientBtn.addEventListener('click', addIngredient);
 saveBtn.addEventListener('click', saveRecipe);
+createAccountBtn.addEventListener('click', createAccount);
