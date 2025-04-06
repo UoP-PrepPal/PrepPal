@@ -46,8 +46,7 @@ CREATE TABLE users (
     email TEXT NOT NULL UNIQUE,
     first_name TEXT,
     last_name TEXT,
-    created_at DATE NOT NULL DEFAULT current_date,
-    profile_picture TEXT
+    created_at DATE NOT NULL DEFAULT current_date
 );
 
 -- Create friends table
@@ -55,7 +54,7 @@ CREATE TABLE friends (
     friendship_id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     friend_id INTEGER NOT NULL,
-    friend_status INTEGER NOT NULL,  -- Changed to INTEGER referring to statuses
+    friend_status INTEGER NOT NULL, 
     requested_at DATE DEFAULT current_date,
     accepted_at DATE,
     blocked_at DATE,
