@@ -8,7 +8,7 @@ const usernameInput = document.querySelector('#username');
 //const retypedPassword = document.querySelector('#retype-password');
 const createAccountBtn = document.querySelector('#create-account');
 const firstNameInput = document.querySelector('#first-name');
-const lastNameInput = document.querySelector('last-name');
+const lastNameInput = document.querySelector('#last-name');
 
 function addIngredient() {
     const ingredientValue = ingredientInput.value.trim(); 
@@ -67,10 +67,42 @@ function saveRecipe() {
 
 function createAccount(){
     const userData = {
-
+        username: usernameInput.value.trim(),
+        email: emailInput.value.trim(),
+        firstName: firstNameInput.value.trim(),
+        lastName: lastNameInput.value.trim()
     }
+
+    console.log('User Data: ', userData);
+
+    fetch('/signup', {
+        method: 'POST',
+        header: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Error:', data.error);
+        } else {
+            console.log('Recipe saved successfully:', data);
+        }
+    })
+    .catch(error => {
+        console.error('Error saving recipe:', error);
+    });
 }
 
-addIngredientBtn.addEventListener('click', addIngredient);
-saveBtn.addEventListener('click', saveRecipe);
-createAccountBtn.addEventListener('click', createAccount);
+if (addIngredientBtn) {
+    addIngredientBtn.addEventListener('click', addIngredient);
+}
+
+if (saveBtn) {
+    saveBtn.addEventListener('click', saveRecipe);
+}
+
+if (createAccountBtn) {
+    createAccountBtn.addEventListener('click', createAccount);
+}
