@@ -3,7 +3,9 @@ import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import path from 'path';
 import session from 'express-session';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
 const port = 8080;
 
@@ -13,7 +15,7 @@ const dbPromise = open({
 });
 
 app.use(session({
-  secret: 'super-secret-key', 
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {

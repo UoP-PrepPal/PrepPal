@@ -19,6 +19,7 @@
     "start": "node svr.js"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
     "sqlite": "^5.1.1",
