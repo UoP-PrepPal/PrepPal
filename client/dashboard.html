@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PrepPal Dashboard</title>
+  <link rel="stylesheet" href="signUp.css" />
+</head>
+<body>
+  <div class="signup-container">
+    <div class="signup-box">
+      <h1>Welcome to PrepPal</h1>
+
+      <div class="dashboard-buttons">
+        <button class="btn" onclick="location.href='recipe.html'">Add New Recipe</button>
+        <button class="btn" onclick="location.href='myRecipes.html'">View My Recipes</button>
+        <button class="btn" onclick="logout()">Log Out</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Fetch current user info
+    fetch('/me')
+      .then(res => {
+        if (res.status === 401) {
+          window.location.href = '/login.html'; // redirect if not logged in
+        }
+        return res.json();
+      })
+      .then(user => {
+        document.getElementById('greeting').textContent = `Hello, ${user.first_name}!`;
+      })
+      .catch(err => {
+        console.error('Failed to fetch user info:', err);
+      });
+
+    // Log out function
+    function logout() {
+      fetch('/logout', { method: 'POST' })
+        .then(() => {
+          window.location.href = '/login.html';
+        })
+        .catch(err => {
+          console.error('Logout error:', err);
+        });
+    }
+  </script>
+</body>
+</html>
