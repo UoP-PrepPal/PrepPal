@@ -90,6 +90,29 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+app.post('/signIn', async (req, res) => {
+  const { username, email } = req.body;
+  const db = await dbPromise;
+  const user = await db.get('SELECT * FROM users WHERE username = ? AND email = ?', [username, email]);
+
+  if (user) {
+    req.session.userId = user.user_id;
+    req.session.username = user.username;
+    res.status(200).json({ message: 'User signed in successfully', userId: user.user_id });
+  } else {
+    res.status(401).json({ error: 'Invalid credentials' });
+  }
+})
+
+app.get('/dashboard', (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ error: 'You must be logged in to view the dashboard' });
+  }
+
+  res.sendFile(path.resolve('client', 'dashboard.html'));
+});
+
+
 
 app.get('/recipes', async (req, res) => {
   

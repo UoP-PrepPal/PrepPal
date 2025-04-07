@@ -9,6 +9,9 @@ const usernameInput = document.querySelector('#username');
 const createAccountBtn = document.querySelector('#create-account');
 const firstNameInput = document.querySelector('#first-name');
 const lastNameInput = document.querySelector('#last-name');
+const signInUsername = document.querySelector('#signin-username');
+const signInEmail = document.querySelector('#signin-email');
+const SignInBtn = document.querySelector('#signin-btn');
 
 function addIngredient() {
     const ingredientValue = ingredientInput.value.trim(); 
@@ -95,6 +98,33 @@ function createAccount(){
     });
 }
 
+function signIn(){
+    const signInData = {
+        username: signInUsername.value.trim(),
+        email: signInEmail.value.trim()
+    }
+    console.log('Sign in data: ', signInData);
+
+    fetch('/signin', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(signInData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Error:', data.error);
+        } else {
+            console.log('User signed in successfully:', data);
+        }
+    })
+    .catch(error => {
+        console.error('Error signing in:', error);
+    });
+}
+
 
 if (addIngredientBtn) {
     addIngredientBtn.addEventListener('click', addIngredient);
@@ -106,4 +136,8 @@ if (saveBtn) {
 
 if (createAccountBtn) {
     createAccountBtn.addEventListener('click', createAccount);
+}
+
+if (SignInBtn){
+    SignInBtn.addEventListener('click', signIn);
 }
