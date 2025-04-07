@@ -112,6 +112,14 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.resolve('client', 'dashboard.html'));
 });
 
+app.post('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to log out' });
+    }
+    res.status(200).json({ message: 'Logged out successfully' });
+  });
+});
 
 
 app.get('/recipes', async (req, res) => {

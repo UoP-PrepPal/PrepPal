@@ -12,6 +12,7 @@ const lastNameInput = document.querySelector('#last-name');
 const signInUsername = document.querySelector('#signin-username');
 const signInEmail = document.querySelector('#signin-email');
 const SignInBtn = document.querySelector('#signin-btn');
+const logoutBtn = document.querySelector('#logout-btn');
 
 function addIngredient() {
     const ingredientValue = ingredientInput.value.trim(); 
@@ -118,12 +119,36 @@ function signIn(){
             console.error('Error:', data.error);
         } else {
             console.log('User signed in successfully:', data);
+            window.location.href = '/dashboard'; 
         }
     })
     .catch(error => {
         console.error('Error signing in:', error);
     });
 }
+
+function logout() {
+    console.log("Hello");
+    fetch('/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Error:', data.error);
+        } else {
+            console.log('Logged out successfully:', data.message);
+            window.location.href = '/signin.html'; 
+        }
+    })
+    .catch(error => {
+        console.error('Error logging out:', error);
+    });
+}
+
 
 
 if (addIngredientBtn) {
@@ -140,4 +165,8 @@ if (createAccountBtn) {
 
 if (SignInBtn){
     SignInBtn.addEventListener('click', signIn);
+}
+
+if (logoutBtn){
+    logoutBtn.addEventListener('click', logout);
 }
