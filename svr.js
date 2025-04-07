@@ -98,7 +98,7 @@ app.post('/signIn', async (req, res) => {
   if (user) {
     req.session.userId = user.user_id;
     req.session.username = user.username;
-    res.status(200).json({ message: 'User signed in successfully', userId: user.user_id });
+    res.status(200).json({ message: 'User signed in successfully', user_id: user.user_id });
   } else {
     res.status(401).json({ error: 'Invalid credentials' });
   }

@@ -38,8 +38,14 @@ function saveRecipe() {
     const ingredientElements = ingredientList.querySelectorAll('p');
     const ingredients = Array.from(ingredientElements).map(ingredient => ingredient.textContent);
 
+    const user_id = sessionStorage.getItem('userId');
+    if (!user_id){
+        console.log("User is not logged in");
+        return;
+    }
+
     const recipeData = {
-        user_id: 1,
+        user_id: user_id,
         name: recipeName.value.trim(),
         description: recipeDescription.value.trim(),
         instructions: recipeDescription.value.trim(),
@@ -119,6 +125,7 @@ function signIn(){
             console.error('Error:', data.error);
         } else {
             console.log('User signed in successfully:', data);
+            sessionStorage.setItem('userId', data.user_id);
             window.location.href = '/dashboard'; 
         }
     })
