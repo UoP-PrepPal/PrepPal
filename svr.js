@@ -104,6 +104,10 @@ app.post('/signIn', async (req, res) => {
   }
 })
 
+app.get('/signin', async (req, res) => {
+  res.sendFile(path.resolve('client', 'signIn.html'));
+})
+
 app.get('/dashboard', (req, res) => {
   if (!req.session.userId) {
     return res.status(401).json({ error: 'You must be logged in to view the dashboard' });
@@ -111,6 +115,10 @@ app.get('/dashboard', (req, res) => {
 
   res.sendFile(path.resolve('client', 'dashboard.html'));
 });
+
+app.get('/signup', async (req, res) => {
+  res.sendFile(path.resolve('client', 'signUp.html'));
+})
 
 app.post('/logout', (req, res) => {
   req.session.destroy((err) => {
