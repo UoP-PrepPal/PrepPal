@@ -355,3 +355,16 @@ input:focus, select:focus {
 .dashboard-buttons .btn:hover {
     background-color: var(--button-hover);
 }
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: var(--button-hover);
+}
