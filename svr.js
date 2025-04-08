@@ -138,6 +138,23 @@ app.get('/addrecipes', async (req, res) => {
   res.sendFile(path.resolve('client', 'recipe.html'));
 })
 
+app.get('/recipes', async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.status(401).json({ error: 'You must be logged in to view recipes' });
+    }
+
+    const db = await dbPromise;
+    const recipes = await db.all('SELECT * FROM recipes WHERE user_id = ?', [req.session.userId]);
+
+    res.status(200).json({ recipes });
+  } catch (error) {
+    console.error('Error fetching recipes:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
 });

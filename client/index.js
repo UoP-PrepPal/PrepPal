@@ -13,6 +13,43 @@ const signInUsername = document.querySelector('#signin-username');
 const signInEmail = document.querySelector('#signin-email');
 const SignInBtn = document.querySelector('#signin-btn');
 const logoutBtn = document.querySelector('#logout-btn');
+const recipesList = document.getElementById("recipes-list");
+
+if (recipesList) {
+    window.addEventListener('DOMContentLoaded', () => {
+      fetch('/recipes')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch recipes');
+          }
+          return response.json();
+        })
+        .then(data => {
+          recipesList.innerHTML = '';
+          if (data.recipes.length === 0) {
+            recipesList.innerHTML = '<p>No recipes found.</p>';
+          } else {
+            data.recipes.forEach(recipe => {
+              const recipeCard = document.createElement('div');
+              recipeCard.className = 'recipe-card';
+              recipeCard.innerHTML = `
+                <h3>${recipe.name}</h3>
+                <p><strong>Description:</strong> ${recipe.description}</p>
+                <p><strong>Instructions:</strong> ${recipe.instructions}</p>
+                <p><strong>Prep Time:</strong> ${recipe.est_time_min} mins</p>
+                <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
+              `;
+              recipesList.appendChild(recipeCard);
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error loading recipes:', error);
+          recipesList.innerHTML = '<p>Error loading recipes.</p>';
+        });
+    });
+  }
+  
 
 function addIngredient() {
     const ingredientValue = ingredientInput.value.trim(); 
