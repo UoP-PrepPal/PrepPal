@@ -85,7 +85,7 @@ function saveRecipe() {
         user_id: user_id,
         name: recipeName.value.trim(),
         description: recipeDescription.value.trim(),
-        instructions: recipeDescription.value.trim(),
+        instructions: recipeInstructions.value.trim(),
         est_time_min: parseInt(recipeTime.value, 10),
         ingredients: ingredients.join(', ') 
     };
