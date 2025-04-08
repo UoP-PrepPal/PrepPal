@@ -130,8 +130,12 @@ app.post('/logout', (req, res) => {
 });
 
 
-app.get('/recipes', async (req, res) => {
-  
+app.get('/addrecipes', async (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ error: 'You must be logged in to add recipes' });
+  }
+
+  res.sendFile(path.resolve('client', 'recipe.html'));
 })
 
 app.listen(port, () => {
