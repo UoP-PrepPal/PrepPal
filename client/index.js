@@ -38,6 +38,7 @@ if (recipesList) {
                 <p><strong>Instructions:</strong> ${recipe.instructions}</p>
                 <p><strong>Prep Time:</strong> ${recipe.est_time_min} mins</p>
                 <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
+                <button class="delete-btn" data-id="${recipe.recipe_id}">Delete</button>
               `;
               recipesList.appendChild(recipeCard);
             });
@@ -48,7 +49,30 @@ if (recipesList) {
           recipesList.innerHTML = '<p>Error loading recipes.</p>';
         });
     });
-  }
+
+    // Delete button handler
+    recipesList.addEventListener('click', function (event) {
+      if (event.target.classList.contains('delete-btn')) {
+        const recipeId = event.target.getAttribute('data-id');
+        if (confirm('Are you sure you want to delete this recipe?')) {
+          fetch(`/recipes/${recipeId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.message) {
+              event.target.parentElement.remove(); // Remove the recipe card
+            } else {
+              console.error('Delete failed:', data.error);
+            }
+          })
+          .catch(err => console.error('Error deleting recipe:', err));
+        }
+      }
+    });
+}
+
   
 
 function addIngredient() {

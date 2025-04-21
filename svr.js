@@ -154,6 +154,31 @@ app.get('/recipes', async (req, res) => {
   }
 });
 
+app.delete('/recipes/:id', async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const recipeId = req.params.id;
+    const db = await dbPromise;
+
+    const result = await db.run(
+      'DELETE FROM recipes WHERE recipe_id = ? AND user_id = ?',
+      [recipeId, req.session.userId]
+    );
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Recipe not found or unauthorized' });
+    }
+
+    res.status(200).json({ message: 'Recipe deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting recipe:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
