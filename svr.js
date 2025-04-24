@@ -180,6 +180,36 @@ app.delete('/recipes/:id', async (req, res) => {
 });
 
 
+app.put('/recipes/:id', async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const recipeId = req.params.id;
+    const { name, description, instructions, est_time_min, ingredients } = req.body;
+
+    const db = await dbPromise;
+
+    const result = await db.run(`
+      UPDATE recipes
+      SET name = ?, description = ?, instructions = ?, est_time_min = ?, ingredients = ?
+      WHERE recipe_id = ? AND user_id = ?
+    `, [name, description, instructions, est_time_min, ingredients, recipeId, req.session.userId]);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Recipe not found or unauthorized' });
+    }
+
+    res.status(200).json({ message: 'Recipe updated successfully' });
+  } catch (error) {
+    console.error('Error updating recipe:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
 });

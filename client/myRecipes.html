@@ -5,15 +5,105 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Recipes</title>
   <link rel="stylesheet" href="introduction.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      color: #007BFF;
+    }
+
+    h1 {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .recipe-card {
+      border: 1px solid #ccc;
+      padding: 16px;
+      margin-bottom: 24px;
+      border-radius: 8px;
+      background-color: #fafafa;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+    }
+
+    .button-group {
+      margin-top: 12px;
+    }
+
+    .recipe-card button {
+      padding: 6px 12px;
+      margin-right: 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .edit-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .save-btn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .cancel-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <a href="/dashboard" class="back-link">← Back to Dashboard</a>
     <h1>My Recipes</h1>
-
-    <div id="recipes-list">
-    </div>
+    <div id="recipes-list"></div>
   </div>
-<script src="index.js"></script>
+  <script src="index.js"></script>
 </body>
 </html>

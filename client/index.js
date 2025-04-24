@@ -33,11 +33,12 @@ if (recipesList) {
               const recipeCard = document.createElement('div');
               recipeCard.className = 'recipe-card';
               recipeCard.innerHTML = `
-                <h3>${recipe.name}</h3>
-                <p><strong>Description:</strong> ${recipe.description}</p>
-                <p><strong>Instructions:</strong> ${recipe.instructions}</p>
-                <p><strong>Prep Time:</strong> ${recipe.est_time_min} mins</p>
-                <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
+                <input type="text" class="edit-name" value="${recipe.name}" disabled />
+                <textarea class="edit-description" disabled>${recipe.description}</textarea>
+                <textarea class="edit-instructions" disabled>${recipe.instructions}</textarea>
+                <input type="number" class="edit-time" value="${recipe.est_time_min}" disabled />
+                <textarea class="edit-ingredients" disabled>${recipe.ingredients}</textarea>
+                <button class="edit-btn" data-id="${recipe.recipe_id}">Edit</button>
                 <button class="delete-btn" data-id="${recipe.recipe_id}">Delete</button>
               `;
               recipesList.appendChild(recipeCard);
@@ -49,30 +50,70 @@ if (recipesList) {
           recipesList.innerHTML = '<p>Error loading recipes.</p>';
         });
     });
-
-    // Delete button handler
+  
     recipesList.addEventListener('click', function (event) {
-      if (event.target.classList.contains('delete-btn')) {
-        const recipeId = event.target.getAttribute('data-id');
+      const target = event.target;
+  
+      if (target.classList.contains('delete-btn')) {
+        const recipeId = target.getAttribute('data-id');
         if (confirm('Are you sure you want to delete this recipe?')) {
           fetch(`/recipes/${recipeId}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
           })
-          .then(response => response.json())
-          .then(data => {
-            if (data.message) {
-              event.target.parentElement.remove(); // Remove the recipe card
-            } else {
-              console.error('Delete failed:', data.error);
-            }
+            .then(response => response.json())
+            .then(data => {
+              if (data.message) {
+                target.parentElement.remove();
+              } else {
+                console.error('Delete failed:', data.error);
+              }
+            })
+            .catch(err => console.error('Error deleting recipe:', err));
+        }
+      }
+  
+      if (target.classList.contains('edit-btn')) {
+        const card = target.parentElement;
+        const isEditing = target.textContent === 'Save';
+  
+        const inputs = card.querySelectorAll('input, textarea');
+  
+        if (isEditing) {
+          const recipeId = target.getAttribute('data-id');
+          const updatedData = {
+            name: card.querySelector('.edit-name').value.trim(),
+            description: card.querySelector('.edit-description').value.trim(),
+            instructions: card.querySelector('.edit-instructions').value.trim(),
+            est_time_min: parseInt(card.querySelector('.edit-time').value.trim(), 10),
+            ingredients: card.querySelector('.edit-ingredients').value.trim()
+          };
+  
+          fetch(`/recipes/${recipeId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedData)
           })
-          .catch(err => console.error('Error deleting recipe:', err));
+            .then(res => res.json())
+            .then(data => {
+              if (data.message) {
+                console.log('Recipe updated successfully:', data);
+                inputs.forEach(el => el.disabled = true);
+                target.textContent = 'Edit';
+              } else {
+                console.error('Update failed:', data.error);
+              }
+            })
+            .catch(err => console.error('Error updating recipe:', err));
+        } else {
+          inputs.forEach(el => el.disabled = false);
+          target.textContent = 'Save';
         }
       }
     });
-}
-
+  }
+  
+  
   
 
 function addIngredient() {
