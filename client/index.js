@@ -78,12 +78,27 @@ if (recipesList) {
 function addIngredient() {
     const ingredientValue = ingredientInput.value.trim(); 
     if (ingredientValue) {
+        const ingredientWrapper = document.createElement('div');
+        ingredientWrapper.classList.add('ingredient-item');
+
         const newIngredient = document.createElement('p');
         newIngredient.textContent = ingredientValue;
-        ingredientList.appendChild(newIngredient);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '❌';
+        deleteBtn.style.marginLeft = '8px';
+        deleteBtn.addEventListener('click', () => {
+            ingredientWrapper.remove();
+        });
+
+        ingredientWrapper.appendChild(newIngredient);
+        ingredientWrapper.appendChild(deleteBtn);
+        ingredientList.appendChild(ingredientWrapper);
+
         ingredientInput.value = '';
     }
 }
+
 
 function saveRecipe() {
     const recipeName = document.querySelector('#recipe-name');

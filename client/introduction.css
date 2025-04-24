@@ -413,3 +413,16 @@ input:focus, select:focus {
     background-color: #c0392b;
   }
   
+  .ingredient-item {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+}
+
+.delete-ingredient {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 16px;
+    cursor: pointer;
+}

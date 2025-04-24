@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(express.static('client'));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.resolve('client', 'introduction.html'));
+  res.sendFile(path.resolve('client', 'signIn.html'));
 });
 
 app.post('/recipes', async (req, res) => {
