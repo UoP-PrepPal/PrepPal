@@ -15,7 +15,7 @@
   "type": "module",
   "main": "svr.js",
   "scripts": {
-    "test": "run",
+    "test": "jest",
     "start": "node svr.js"
   },
   "dependencies": {
@@ -24,5 +24,9 @@
     "express-session": "^1.18.1",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
   }
 }
