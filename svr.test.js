@@ -17,10 +17,18 @@ describe("Entering Details", () => {
     expect(res.body.error).toContain("Missing required fields");
   });
 
+  test("signin should return success status 200 for valid credentials", async () => {
+    const res = await request(app)
+      .post("/signIn")
+      .send({ username: "testing", email: "testing@testing.com" }); // Test data attempting to sign in with an existing account
+    expect(res.statusCode).toBe(200);
+    expect(res.body.message).toBe("User signed in successfully");
+  });
+
   test("signIn should return error status 401 for invalid credentials", async () => {
     const res = await request(app)
       .post("/signIn")
-      .send({ username: "invalid", email: "invalid@example.com" }); // Test data attempting to sign in with a non-existent account
+      .send({ username: "invalid", email: "invalid@invalid.com" }); // Test data attempting to sign in with a non-existent account
     expect(res.statusCode).toBe(401);
     expect(res.body.error).toBe("Invalid credentials");
   });
