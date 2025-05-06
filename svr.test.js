@@ -56,3 +56,12 @@ describe("Dashboard Access", () => {
     expect(res.headers["content-type"]).toContain("text/html");
   });
 });
+
+
+describe("Adding Recipes", () => {
+  test("addRecipe should return error status 401 when attempting to add a recipe while not logged in", async () => {
+    const res = await request(app).get("/addrecipes");
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("You must be logged in to add recipes");
+  });
+});
