@@ -12,6 +12,7 @@ const lastNameInput = document.querySelector('#last-name');
 const signInUsername = document.querySelector('#signin-username');
 const signInEmail = document.querySelector('#signin-email');
 const SignInBtn = document.querySelector('#signin-btn');
+const signInError = document.querySelector('#signin-error')
 const logoutBtn = document.querySelector('#logout-btn');
 const recipesList = document.getElementById("recipes-list");
 
@@ -239,15 +240,22 @@ function signIn(){
     .then(response => response.json())
     .then(data => {
         if (data.error) {
+          if (signInUsername.value == "" || signInEmail.value == "") {
+            signInError.textContent = "Error: Username and / or Email is empty. Please fill both fields";
             console.error('Error:', data.error);
+          } else {
+            signInError.textContent = "Error: Username and / or Email is incorrect. Please check and try again";
+            console.error('Error:', data.error);}
         } else {
             console.log('User signed in successfully:', data);
             sessionStorage.setItem('userId', data.user_id);
             window.location.href = '/dashboard'; 
+            signInError.textContent = "User signed in successfully!"
         }
     })
     .catch(error => {
         console.error('Error signing in:', error);
+        signInError = "Error signing in";
     });
 }
 

@@ -426,3 +426,8 @@ input:focus, select:focus {
     font-size: 16px;
     cursor: pointer;
 }
+
+#signin-error {
+    color: rgb(174, 14, 14);
+    width: 70%;
+}
