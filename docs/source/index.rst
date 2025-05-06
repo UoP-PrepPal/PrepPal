@@ -1,17 +1,15 @@
-.. PrepPal documentation master file, created by
-   sphinx-quickstart on Tue May  6 10:26:43 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Welcome to PrepPal's documentation!
+====================================
 
-PrepPal documentation
-=====================
+PrepPal is a meal planning and preparation app designed to help users plan healthy meals and stay organized.
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
-
+Contents
+--------
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: User Guide:
 
+   introduction
+   setup
+   features
