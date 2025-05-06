@@ -35,9 +35,9 @@ describe("Entering Details", () => {  // Test suite for entering user details fo
 })
 
 
-describe("Dashboard Access", () => {
+describe("Dashboard Access", () => {  // Test suite for accessing the dashboard page
   test("dashboard should return error status 401 if user is not logged in", async () => {
-    const res = await request(app).get("/dashboard");
+    const res = await request(app).get("/dashboard");  // Attempting to access the dashboard without first logging in
     expect(res.statusCode).toBe(401);
     expect(res.body.error).toBe("You must be logged in to view the dashboard");
   });
@@ -54,5 +54,14 @@ describe("Dashboard Access", () => {
     const res = await agent.get("/dashboard");
     expect(res.statusCode).toBe(200);
     expect(res.headers["content-type"]).toContain("text/html");
+  });
+});
+
+
+describe("Adding Recipes", () => {  // Test suite for adding recipes
+  test("addRecipe should return error status 401 when attempting to add a recipe while not logged in", async () => {
+    const res = await request(app).get("/addrecipes");  // Attempting to access the add recipes page without first logging in
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("You must be logged in to add recipes");
   });
 });
