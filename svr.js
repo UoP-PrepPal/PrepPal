@@ -4,18 +4,22 @@ import sqlite3 from 'sqlite3';
 import path from 'path';
 import session from 'express-session';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 const app = express();
 const port = 8080;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const dbPromise = open({
-  filename: path.resolve('db', 'database.sqlite'),
+  filename: path.resolve(__dirname, 'db', 'database.sqlite'),
   driver: sqlite3.Database,
 });
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'default-secret-key',
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -213,3 +217,5 @@ app.put('/recipes/:id', async (req, res) => {
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
 });
+
+export default app;
