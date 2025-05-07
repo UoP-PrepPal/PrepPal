@@ -35,6 +35,23 @@ describe("Entering Details", () => {  // Test suite for entering user details fo
 })
 
 
+describe("Logout Feature", () => {
+  test("logout should return should return success status 200 and log out if user is logged in", async () => {
+    const agent = request.agent(app);
+
+    // Simulating a user sign in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    const res = await agent.post("/logout");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.message).toBe("Logged out successfully");
+  });
+});
+
+
 describe("Dashboard Access", () => {  // Test suite for accessing the dashboard page
   test("dashboard should return error status 401 if user is not logged in", async () => {
     const res = await request(app).get("/dashboard");  // Attempting to access the dashboard without first logging in
@@ -65,3 +82,5 @@ describe("Adding Recipes", () => {  // Test suite for adding recipes
     expect(res.body.error).toBe("You must be logged in to add recipes");
   });
 });
+
+
