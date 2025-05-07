@@ -35,7 +35,7 @@ describe("Entering Details", () => {  // Test suite for entering user details fo
 })
 
 
-describe("Logout Feature", () => {
+describe("Logging Out", () => {
   test("logout should return should return success status 200 and log out if user is logged in", async () => {
     const agent = request.agent(app);
 
@@ -84,3 +84,10 @@ describe("Adding Recipes", () => {  // Test suite for adding recipes
 });
 
 
+describe("Viewing Recipes", () => {  // Test suite for viewing recipes
+  test("recipes should return error status 401 when attempting to view recipes while not logged in", async () => {
+    const res = await request(app).get("/recipes");  // Attempting to access the recipes page without first logging in
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("You must be logged in to view recipes");
+  });
+});
