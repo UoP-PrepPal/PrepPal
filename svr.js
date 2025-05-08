@@ -241,6 +241,35 @@ app.put('/recipes/:id', async (req, res) => {
   }
 });
 
+// Serve the "View Other's Recipes" page
+//app.get('/view-others-recipes', (req, res) => {
+//  res.sendFile(path.resolve('client', 'view-others-recipes.html'));
+//});
+
+
+// Route: Get recipes of a user by username
+app.get('/recipes/username/:username', async (req, res) => {
+  try {
+    const { username } = req.params;
+    const db = await dbPromise;
+
+    // Fetch the user by username
+    const user = await db.get('SELECT * FROM users WHERE username = ?', [username]);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Fetch the recipes of this user
+    const recipes = await db.all('SELECT * FROM recipes WHERE user_id = ?', [user.user_id]);
+
+    res.status(200).json({ recipes });
+  } catch (error) {
+    console.error('Error fetching user recipes:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Start server on specified port
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
