@@ -15,6 +15,7 @@ describe("Signing Up", () => {  // Test suite for entering user details for sign
     expect(res.statusCode).toBe(400);
     expect(res.body.error).toContain("Missing required fields");
   });
+
 });
 
 
@@ -46,6 +47,54 @@ describe("Signing In", () => {  // Test suite for signing in
 });
 
 
+describe("Adding Recipes", () => {
+  test("addRecipe should return error status 404 when attempting to add a recipe while not logged in", async () => {
+    const recipeData = {
+      name: "Test Recipe",
+      ingredients: ["Eggs", "Flour"],
+      instructions: "Mix and bake."
+    };
+
+    const res = await request(app)
+      .post("/recipe")
+      .send(recipeData);
+
+    expect(res.statusCode).toBe(404);
+  });
+
+  test("recipes should return status 200 when viewing recipes while logged in", async () => {
+    const agent = request.agent(app);
+
+    await agent.post("/signIn").send({
+        username: "testing",
+        email: "testing@testing.com",
+      });
+
+    const res = await agent.get("/recipes");
+
+    expect(res.statusCode).toBe(200);
+  });
+
+  test("recipes should return status 401 when not logged in", async () => {
+    const res = await request(app).get("/recipes");
+    expect(res.statusCode).toBe(401);
+  });
+
+  test("recipes should return status 200 when viewing recipes while logged in", async () => {
+  const agent = request.agent(app);
+
+  await agent.post("/signIn").send({
+        username: "testing",
+        email: "testing@testing.com",
+      });
+
+  const res = await agent.get("/recipes");
+
+  expect(res.statusCode).toBe(200);
+});
+
+
+});
 
 
 describe("Logging Out", () => {
