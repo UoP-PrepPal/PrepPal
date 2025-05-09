@@ -44,6 +44,22 @@ describe("Signing In", () => {  // Test suite for signing in
     expect(res.body.error).toBe("Invalid credentials");
   });
 
+  // Test cases for missing username and email - these are to make the tests more closely match the test plan
+  test("signIn should return error status 401 for attempting to sign in with missing username", async () => {
+    const res = await request(app)
+      .post("/signIn")
+      .send({ username: "", email: "testing@testing.com" }); // Test data attempting to sign in with missing username
+    expect(res.statusCode).toBe(401); 
+    expect(res.body.error).toBe("Invalid credentials");
+  });
+
+  test("signIn should return error status 401 for attempting to sign in with missing email", async () => {
+    const res = await request(app)
+      .post("/signIn")
+      .send({ username: "testing", email: "" }); // Test data attempting to sign in with missing email
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("Invalid credentials");
+  });
 });
 
 describe("Viewing Recipes", () => {  // Test suite for viewing recipes
