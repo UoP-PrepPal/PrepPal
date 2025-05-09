@@ -150,6 +150,10 @@ app.get('/signup', async (req, res) => {
 
 // Route: Log out user by destroying session
 app.post('/logout', (req, res) => {
+if (!req.session.userId) {
+    return res.status(500).json({ error: 'Failed to log out' });
+  }
+
   req.session.destroy((err) => {
     if (err) {
       return res.status(500).json({ error: 'Failed to log out' });

@@ -1,5 +1,6 @@
 import request from "supertest";
 import app from "./svr.js";
+import e from "express";
 /*
 npm installs I used:
   npm install --save-dev jest @jest-environment-jsdom
@@ -168,6 +169,12 @@ describe("Logging Out", () => {
     const res = await agent.post("/logout");  // Attempting to log out while logged in
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("Logged out successfully");
+  });
+
+  test("logout should return error status 500 if user attempts to log out while not logged in", async () => {
+    const res = await request(app).post("/logout");  // Attempting to log out while not logged in
+    expect(res.statusCode).toBe(500);
+    expect(res.body.error).toBe("Failed to log out");
   });
 });
 
