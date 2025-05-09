@@ -273,6 +273,63 @@ app.get('/recipes/username/:username', async (req, res) => {
   }
 });
 
+app.post('/recipes/:id/rate', async (req, res) => {
+  try {
+    const db = await dbPromise;
+    const recipeId = parseInt(req.params.id, 10);
+    const { user_id, rating } = req.body;
+
+    if (!user_id || !rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: 'Invalid rating or user ID' });
+    }
+
+    const recipe = await db.get('SELECT * FROM recipes WHERE recipe_id = ?', [recipeId]);
+    if (!recipe) {
+      return res.status(404).json({ error: 'Recipe not found' });
+    }
+
+    await db.run(`
+      INSERT INTO ratings (user_id, recipe_id, rating)
+      VALUES (?, ?, ?)
+      ON CONFLICT(user_id, recipe_id) DO UPDATE SET rating = excluded.rating
+    `, [user_id, recipeId, rating]);
+
+    res.json({ message: 'Rating submitted successfully' });
+  } catch (err) {
+    console.error('Error submitting rating:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Route: Get average rating of a specific recipe
+app.get('/recipes/:id/average-rating', async (req, res) => {
+  try {
+    const recipeId = parseInt(req.params.id, 10);
+    const db = await dbPromise;
+
+    // Get the average rating for the recipe
+    const result = await db.get(`
+      SELECT AVG(rating) AS average_rating
+      FROM ratings
+      WHERE recipe_id = ?
+    `, [recipeId]);
+
+    if (!result || result.average_rating === null) {
+      return res.status(404).json({ error: 'Recipe not found or no ratings available' });
+    }
+
+    res.status(200).json({
+      recipe_id: recipeId,
+      average_rating: result.average_rating.toFixed(2), // rounding to 2 decimal places
+    });
+  } catch (error) {
+    console.error('Error fetching average rating:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 // Start server on specified port
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
