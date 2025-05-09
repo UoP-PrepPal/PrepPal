@@ -118,7 +118,7 @@ describe("Viewing others' Recipes", () => {
     username: "sadkjbv"
   };
 
-  const res = await request(app)
+  const res = await agent
     .get(`/recipes/username/${usernameInput.username}`);
 
   expect(res.statusCode).toBe(404);
@@ -128,19 +128,34 @@ describe("Viewing others' Recipes", () => {
   const agent = request.agent(app);
 
   await agent.post("/signIn").send({
-      username: "testing",
-      email: "testing@testing.com",
+      username: "alighezal",
+      email: "alighezal773@gmail.com",
     });
   
   const usernameInput = {
     username: "alighezal"
   };
 
-  const res = await request(app)
+  const res = await agent
     .get(`/recipes/username/${usernameInput.username}`);
 
 
   expect(res.statusCode).toBe(200);
+  });
+
+
+  test("/recipes/username/:username should return error code 401 when trying to view others recipes while not logged in", async () => {
+  const agent = request.agent(app);
+  
+  const usernameInput = {
+    username: "alighezal"
+  };
+
+  const res = await agent
+    .get(`/recipes/username/${usernameInput.username}`);
+
+
+  expect(res.statusCode).toBe(401);
   });
 })
 
