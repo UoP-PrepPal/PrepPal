@@ -99,10 +99,32 @@ describe("Adding Recipes", () => {
   const res = await agent.get("/recipes");
 
   expect(res.statusCode).toBe(200);
-});
+  });
 
 
 });
+
+
+describe("Viewing others' Recipes", () => {
+  test("/recipes/username/:username should return error code 404 when trying to view the recipe of a non-existent user", async () => {
+  const agent = request.agent(app);
+
+  await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+  
+  const usernameInput = {
+    username: "sadkjbv"
+  };
+
+  const res = await request(app)
+    .post("/recipes/username/:username")
+    .send(usernameInput);
+
+  expect(res.statusCode).toBe(404);
+  });
+})
 
 
 describe("Logging Out", () => {
