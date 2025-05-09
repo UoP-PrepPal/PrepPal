@@ -46,6 +46,14 @@ describe("Signing In", () => {  // Test suite for signing in
 
 });
 
+describe("Viewing Recipes", () => {  // Test suite for viewing recipes
+  test("recipes should return error status 401 when attempting to view recipes while not logged in", async () => {
+    const res = await request(app).get("/recipes");  // Attempting to access the recipes page without first logging in
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("You must be logged in to view recipes");
+  });
+});
+
 
 describe("Adding Recipes", () => {
   test("addRecipe should return error status 404 when attempting to add a recipe while not logged in", async () => {
