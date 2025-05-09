@@ -78,14 +78,16 @@ CREATE TABLE recipes (
 
 -- Create ratings table
 CREATE TABLE ratings (
-  user_id INTEGER NOT NULL,
-  recipe_id INTEGER NOT NULL,
-  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
-  PRIMARY KEY (user_id, recipe_id),
-  FOREIGN KEY (user_id) REFERENCES users(user_id),
-  FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
+    rating_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    recipe_id INTEGER NOT NULL,
+    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 10),
+    comments TEXT,
+    date_added DATE NOT NULL DEFAULT current_date,
+    edited_at DATE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
 );
-
 
 -- Create categories table
 CREATE TABLE categories (
