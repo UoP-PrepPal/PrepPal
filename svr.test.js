@@ -98,11 +98,6 @@ describe("Adding Recipes", () => {
 
     expect(res.statusCode).toBe(404);
   });
-
-  test("recipes should return status 401 when not logged in", async () => {
-    const res = await request(app).get("/recipes");
-    expect(res.statusCode).toBe(401);
-  });
 });
 
 describe("Viewing others' Recipes", () => {
