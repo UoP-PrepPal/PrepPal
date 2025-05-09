@@ -63,11 +63,24 @@ describe("Signing In", () => {  // Test suite for signing in
 });
 
 describe("Viewing Recipes", () => {  // Test suite for viewing recipes
+  test("recipes should return status 200 when viewing recipes while logged in", async () => {
+    const agent = request.agent(app);
+
+    await agent.post("/signIn").send({
+        username: "testing",
+        email: "testing@testing.com",
+      });
+
+    const res = await agent.get("/recipes");
+
+    expect(res.statusCode).toBe(200);
+  });
+  
   test("recipes should return error status 401 when attempting to view recipes while not logged in", async () => {
     const res = await request(app).get("/recipes");  // Attempting to access the recipes page without first logging in
     expect(res.statusCode).toBe(401);
     expect(res.body.error).toBe("You must be logged in to view recipes");
-  });
+  }); 
 });
 
 
@@ -86,26 +99,11 @@ describe("Adding Recipes", () => {
     expect(res.statusCode).toBe(404);
   });
 
-  test("recipes should return status 200 when viewing recipes while logged in", async () => {
-    const agent = request.agent(app);
-
-    await agent.post("/signIn").send({
-        username: "testing",
-        email: "testing@testing.com",
-      });
-
-    const res = await agent.get("/recipes");
-
-    expect(res.statusCode).toBe(200);
-  });
-
   test("recipes should return status 401 when not logged in", async () => {
     const res = await request(app).get("/recipes");
     expect(res.statusCode).toBe(401);
   });
-
 });
-
 
 describe("Viewing others' Recipes", () => {
   test("/recipes/username/:username should return error code 404 when trying to view the recipe of a non-existent user", async () => {
