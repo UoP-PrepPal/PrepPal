@@ -119,10 +119,28 @@ describe("Viewing others' Recipes", () => {
   };
 
   const res = await request(app)
-    .post("/recipes/username/:username")
-    .send(usernameInput);
+    .get(`/recipes/username/${usernameInput.username}`);
 
   expect(res.statusCode).toBe(404);
+  });
+
+  test("/recipes/username/:username should success status 200 when trying to view the recipe of an existing user", async () => {
+  const agent = request.agent(app);
+
+  await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+  
+  const usernameInput = {
+    username: "alighezal"
+  };
+
+  const res = await request(app)
+    .get(`/recipes/username/${usernameInput.username}`);
+
+
+  expect(res.statusCode).toBe(200);
   });
 })
 
