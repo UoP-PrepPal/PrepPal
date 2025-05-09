@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Recipe</title>
+    <link rel="stylesheet" href="introduction.css">
+</head>
+<body>
+
+    <div class="container">
+        <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+
+        <h1>Add a Recipe</h1>
+
+        <label for="recipe-name">Recipe Name:</label>
+        <input type="text" id="recipe-name" placeholder="Enter recipe name">
+
+        <label for="recipe-description">Recipe Description:</label>
+        <input type="text" id="recipe-description" placeholder="Enter recipe description">
+
+        <label for="recipe-instructions">Recipe Instructions:</label>
+        <input type="text" id="recipe-instructions" placeholder="Enter recipe instructions">
+
+        <label for="prep-time">Preparation Time (mins):</label>
+        <select id="prep-time">
+            <option value="0">0</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
+            <option value="60">60</option>
+            <option value="90">90</option>
+            <option value="120">120+</option>
+        </select>
+
+        <div class="ingredients-section">
+            <label for="ingredient">Ingredient:</label>
+            <input type="text" id="ingredient" placeholder="Enter an ingredient">
+            <button id="add-ingredient">Add Ingredient</button>
+        </div>
+
+        <ul id="ingredient-list"></ul>
+
+        <button id="save-btn">Save Recipe</button>
+    </div>
+    
+    <script src="index.js"></script>
+</body>
+</html>

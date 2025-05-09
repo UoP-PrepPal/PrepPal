@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sign In - PrepPal</title>
+    <link rel="stylesheet" href="introduction.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="signin-container">
+        <div class="signin-box">
+            <h1>Sign In</h1>
+
+            <div class="textbox">
+                <label for="username">Username</label>
+                <input type="text" id="signin-username" name="username" placeholder="Enter your username" />
+            </div>
+
+            <div class="textbox">
+                <label for="email">Email</label>
+                <input type="email" id="signin-email" name="email" placeholder="Enter your email" />
+            </div>
+
+            <p id="signin-error"></p>
+
+            <input type="submit" id="signin-btn" class="btn" value="Sign In" />
+
+            <p class="small-text">Don't have an account? <a href="/signup">Sign up here</a></p>
+        </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>

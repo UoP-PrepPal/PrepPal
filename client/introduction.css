@@ -1,0 +1,433 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif, monospace;
+}
+
+:root {
+    --primary: #d9ead3;
+    --secondary: #124f5c;
+    --title-colour: rgb(92, 92, 92);
+    --text-colour: #333;
+    --button-hover: #0d3a44;
+}
+
+body {
+    height: 100vh;
+    background-color: var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.signup-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 2rem;
+}
+
+.signup-box {
+    background-color: white;
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.signup-box h1 {
+    text-align: center;
+    color: var(--title-colour);
+    font-size: 2rem;
+}
+
+.textbox {
+    display: flex;
+    flex-direction: column;
+}
+
+.textbox label {
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+    font-size: 0.95rem;
+}
+
+.textbox input {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 1rem;
+    background-color: #f8f8f8;
+}
+
+.btn,
+button {
+    padding: 0.75rem;
+    background-color: var(--secondary);
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    letter-spacing: 1px;
+    width: 100%;
+    font-size: 16px;
+}
+
+.btn:hover,
+button:hover {
+    background-color: var(--button-hover);
+}
+
+#welcome-page > a {
+    padding: 1rem;
+    background-color: var(--secondary);
+    color: rgb(218, 218, 218);
+    border-radius: 10px;
+    width: 12rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    position: absolute;
+    bottom: 20dvh;
+    transition: 0.2s;
+}
+
+#welcome-page > a:active {
+    background-color: #153339;
+}
+
+#welcome-slide-container {
+    width: 80dvw;
+    text-align: center;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    display: flex;
+}
+
+.welcome-slide {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: calc(100% - 4rem);
+    height: 200px;
+    margin-right: 50px;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.welcome-slide h1 {
+    font-size: 30px;
+    font-family: "Pacifico", cursive;
+    color: var(--title-colour);
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome-slide h1 span:first-child {
+    font-size: 25px;
+}
+
+.welcome-slide h1 span:last-child {
+    font-size: 60px;
+    line-height: 20px;
+}
+
+#progress-dots {
+    display: flex;
+    gap: 1rem;
+}
+
+#progress-dots a {
+    width: 1px;
+    height: 1px;
+    padding: 0.2rem;
+    border-radius: 50%;
+    background-color: black;
+    border: 2px solid black;
+    transition: 0.2s;
+}
+
+#progress-dots a:active {
+    background-color: var(--secondary);
+}
+
+.ingredients-section {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.ingredients-section input {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid var(--secondary);
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    min-width: 150px;
+    outline: none;
+}
+
+.ingredients-section button {
+    padding: 12px;
+    background-color: var(--secondary);
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.ingredients-section button:hover {
+    background-color: var(--button-hover);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    text-align: left;
+}
+
+ul li {
+    background: #e9e9e9;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#image-preview {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    margin-top: 10px;
+    border-radius: 8px;
+    display: none;
+}
+
+.hidden {
+    display: none;
+}
+
+
+.container h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--title-colour);
+}
+
+label {
+    font-weight: 600;
+    display: block;
+    margin-top: 1rem;
+    color: var(--text-colour);
+    text-align: left;
+}
+
+input[type="text"], select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 2px solid var(--secondary);
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    color: var(--text-colour);
+    outline: none;
+}
+
+input:focus, select:focus {
+    border-color: var(--button-hover);
+}
+
+#save-btn {
+    margin-top: 2rem;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    background-color: var(--secondary);
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+#save-btn:hover {
+    background-color: var(--button-hover);
+}
+
+.ingredients-section {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.ingredients-section label {
+    margin: 0;
+    min-width: 80px;
+}
+
+#ingredient {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 2px solid var(--secondary);
+    background-color: #f8f8f8;
+    outline: none;
+}
+
+#add-ingredient {
+    padding: 12px;
+    background-color: var(--secondary);
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#add-ingredient:hover {
+    background-color: var(--button-hover);
+}
+
+#ingredient-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 1rem;
+    text-align: left;
+}
+
+#ingredient-list li {
+    background: #e9e9e9;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.dashboard-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    align-items: center;
+}
+
+.dashboard-buttons .btn {
+    width: 80%;
+    max-width: 250px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    letter-spacing: 1px;
+}
+
+.dashboard-buttons .btn:hover {
+    background-color: var(--button-hover);
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: var(--button-hover);
+}
+
+#recipes-list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.recipe-card {
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border: 2px solid var(--secondary);
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.recipe-card h2 {
+    margin-bottom: 0.5rem;
+    color: var(--title-colour);
+}
+
+.recipe-card {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .delete-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin-top: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .delete-btn:hover {
+    background-color: #c0392b;
+  }
+  
+  .ingredient-item {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+}
+
+.delete-ingredient {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#signin-error {
+    color: rgb(174, 14, 14);
+    width: 70%;
+}

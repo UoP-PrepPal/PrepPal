@@ -1,0 +1,45 @@
+{
+  "name": "preppal",
+  "version": "1.0.0",
+  "description": "PrepPal Recipe App for Software Engineering Theory and Practice",
+  "homepage": "https://github.com/UoP-PrepPal/PrepPal#readme",
+  "bugs": {
+    "url": "https://github.com/UoP-PrepPal/PrepPal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UoP-PrepPal/PrepPal.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "svr.js",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "start": "node svr.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.27.1",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    }
+  }
+}
