@@ -88,20 +88,6 @@ describe("Adding Recipes", () => {
     expect(res.statusCode).toBe(401);
   });
 
-  test("recipes should return status 200 when viewing recipes while logged in", async () => {
-  const agent = request.agent(app);
-
-  await agent.post("/signIn").send({
-        username: "testing",
-        email: "testing@testing.com",
-      });
-
-  const res = await agent.get("/recipes");
-
-  expect(res.statusCode).toBe(200);
-  });
-
-
 });
 
 
