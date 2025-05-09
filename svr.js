@@ -63,11 +63,14 @@ app.post('/recipes', async (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?)`,
       [user_id, name, description, instructions, est_time_min, ingredients]
     );
+    
+    // Retrieve the last inserted row ID
+    const row = await db.get('SELECT last_insert_rowid() as id');
 
     // Respond with success
     res.status(201).json({
       message: 'Recipe added successfully',
-      id: result.lastInsertRowid,
+      id: row.id, // Use the retrieved ID
     });
   } catch (error) {
     console.error('Error adding recipe:', error);
