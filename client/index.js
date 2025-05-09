@@ -313,3 +313,4 @@ if (SignInBtn) {
 if (logoutBtn) {
     logoutBtn.addEventListener('click', logout);
 }
+
