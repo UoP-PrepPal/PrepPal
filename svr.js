@@ -250,6 +250,9 @@ app.put('/recipes/:id', async (req, res) => {
 // Route: Get recipes of a user by username
 app.get('/recipes/username/:username', async (req, res) => {
   try {
+    if (!req.session.userId) {
+    return res.status(401).json({ error: 'You must be logged in to view others recipes' });
+  }
     const { username } = req.params;
     const db = await dbPromise;
 
