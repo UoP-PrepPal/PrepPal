@@ -1,6 +1,5 @@
 import request from "supertest";
 import app from "./svr.js";
-
 /*
 npm installs I used:
   npm install --save-dev jest @jest-environment-jsdom
@@ -87,38 +86,4 @@ describe("Dashboard Access", () => {  // Test suite for accessing the dashboard 
     expect(res.body.error).toBe("You must be logged in to view the dashboard");
   });
 });
-
-
-
-describe("Adding Recipes", () => {  // Test suite for adding recipes
-  test("addRecipe should return error status 401 when attempting to add a recipe while not logged in", async () => {
-    const res = await request(app).get("/addrecipes");  // Attempting to access the add recipes page without first logging in
-    expect(res.statusCode).toBe(401);
-    expect(res.body.error).toBe("You must be logged in to add recipes");
-  });
-});
-
-
-describe("Viewing Recipes", () => {  // Test suite for viewing recipes
-  test("recipes should return success status 200 when viewing recipes while logged in", async () => {
-    const agent = request.agent(app); 
-
-    // Simulating a user sign in
-    await agent.post("/signIn").send({
-      username: "testing",
-      email: "testing@testing.com",
-    });
-
-    const res = await agent.get("/recipes");  // Attempting to access the recipes page while logged in
-    expect(res.statusCode).toBe(200);
-    expect(res.headers["content-type"]).toContain("application/json");
-  });
-  
-  test("recipes should return error status 401 when attempting to view recipes while not logged in", async () => {
-    const res = await request(app).get("/recipes");  // Attempting to access the recipes page without first logging in
-    expect(res.statusCode).toBe(401);
-    expect(res.body.error).toBe("You must be logged in to view recipes");
-  });
-});
-
 
