@@ -86,6 +86,39 @@ describe("Viewing Recipes", () => {  // Test suite for viewing recipes
 
 
 describe("Adding Recipes", () => {
+  test("recipes should return success status 200 and add a recipe when user is logged in and enters valid data", async () => {
+    const agent = request.agent(app);
+
+    // Simulating a user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Valid recipe data to be added
+    const recipeData = {
+      user_id: 5,
+      name: "Test Recipe",
+      description: "A simple test recipe",
+      instructions: "Mix ingredients and cook.",
+      est_time_min: 30,
+      ingredients: "Eggs, Flour, Sugar",
+    };
+
+    // Adding the recipe
+    const res = await agent.post("/recipes").send(recipeData);
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body.message).toBe("Recipe added successfully");
+    expect(res.body).toHaveProperty("id"); // Ensure the response contains the recipe ID
+
+    // Cleanup: Delete the added recipe
+    const recipeId = res.body.id;
+    const deleteRes = await agent.delete(`/recipes/${recipeId}`);
+    expect(deleteRes.statusCode).toBe(200);
+    expect(deleteRes.body.message).toBe("Recipe deleted successfully");
+  });
+
   test("addRecipe should return error status 404 when attempting to add a recipe while not logged in", async () => {
     const recipeData = {
       name: "Test Recipe",
@@ -100,6 +133,7 @@ describe("Adding Recipes", () => {
     expect(res.statusCode).toBe(404);
   });
 });
+
 
 describe("Viewing others' Recipes", () => {
   test("/recipes/username/:username should return error code 404 when trying to view the recipe of a non-existent user", async () => {
