@@ -144,6 +144,9 @@ function addIngredient() {
 
         ingredientInput.value = '';
     }
+    else{
+        console.log("Cannot add empty ingredient value")
+    }
 }
 
 // Save a new recipe to the backend

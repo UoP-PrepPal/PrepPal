@@ -35,7 +35,18 @@ describe("Signing In", () => {  // Test suite for signing in
     expect(res.statusCode).toBe(401);
     expect(res.body.error).toBe("Invalid credentials");
   });
+
+  test("signIn should return error status 401 for attempting to sign in with missing credentials", async () => {
+    const res = await request(app)
+      .post("/signIn")
+      .send({ username: "", email: "" }); // Test data attempting to sign in with missing credenttials
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("Invalid credentials");
+  });
+
 });
+
+
 
 
 describe("Logging Out", () => {
@@ -109,3 +120,5 @@ describe("Viewing Recipes", () => {  // Test suite for viewing recipes
     expect(res.body.error).toBe("You must be logged in to view recipes");
   });
 });
+
+
