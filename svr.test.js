@@ -64,7 +64,7 @@ describe("Signing In", () => {  // Test suite for signing in
 });
 
 describe("Viewing Recipes", () => {  // Test suite for viewing recipes
-  test("recipes should return status 200 when viewing recipes while logged in", async () => {
+  test("recipes should return success status 200 when viewing recipes while logged in", async () => {
     const agent = request.agent(app);
 
     await agent.post("/signIn").send({
@@ -98,11 +98,11 @@ describe("Adding Recipes", () => {
     // Valid recipe data to be added
     const recipeData = {
       user_id: 5,
-      name: "Test Recipe",
+      name: "Recipe to Add",
       description: "A simple test recipe",
       instructions: "Mix ingredients and cook.",
       est_time_min: 30,
-      ingredients: "Eggs, Flour, Sugar",
+      ingredients: "Tests, Experiments",
     };
 
     // Adding the recipe
@@ -131,6 +131,69 @@ describe("Adding Recipes", () => {
       .send(recipeData);
 
     expect(res.statusCode).toBe(404);
+  });
+});
+
+describe("Editing Recipes", () => {
+  test("recipes should return success status 200 and edit a recipe when logged in and the recipe belongs to the user", async () => {
+    const agent = request.agent(app);
+
+    // Simulating a user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Adding a recipe to edit later
+    const recipeData = {
+      user_id: 5,
+      name: "Recipe to Edit",
+      description: "This recipe will be edited",
+      instructions: "Edit.",
+      est_time_min: 20,
+      ingredients: "Prior ingredients",
+    };
+
+    const addRes = await agent.post("/recipes").send(recipeData);
+
+    // Ensuring the recipe was added successfully
+    expect(addRes.statusCode).toBe(201);
+    expect(addRes.body.message).toBe("Recipe added successfully");
+    expect(addRes.body).toHaveProperty("id");
+
+    // Retrieving the recipe ID
+    const recipeId = addRes.body.id;
+
+    // Updating recipe data
+    const updatedRecipeData = {
+      name: "Edited Recipe",
+      description: "This recipe has been edited",
+      instructions: "Validate the edits.",
+      est_time_min: 25,
+      ingredients: "New ingredients",
+    };
+
+    // Editing the recipe
+    const editRes = await agent.put(`/recipes/${recipeId}`).send(updatedRecipeData);
+
+    expect(editRes.statusCode).toBe(200);
+    expect(editRes.body.message).toBe("Recipe updated successfully");
+
+    // Verifying the changes
+    const fetchRes = await agent.get("/recipes");
+    const updatedRecipe = fetchRes.body.recipes.find((recipe) => recipe.recipe_id === recipeId);
+
+    expect(updatedRecipe).toBeDefined();
+    expect(updatedRecipe.name).toBe(updatedRecipeData.name);
+    expect(updatedRecipe.description).toBe(updatedRecipeData.description);
+    expect(updatedRecipe.instructions).toBe(updatedRecipeData.instructions);
+    expect(updatedRecipe.est_time_min).toBe(updatedRecipeData.est_time_min);
+    expect(updatedRecipe.ingredients).toBe(updatedRecipeData.ingredients);
+
+    // Cleanup: Delete the edited recipe
+    const deleteRes = await agent.delete(`/recipes/${recipeId}`);
+    expect(deleteRes.statusCode).toBe(200);
+    expect(deleteRes.body.message).toBe("Recipe deleted successfully");
   });
 });
 
@@ -180,7 +243,7 @@ describe("Deleting Recipes", () => {
       email: "testing@testing.com",
     });
 
-    // Settiing ID of the recipe to be deleted to a recipe that does not exist
+    // Setting the ID of the recipe to be deleted to a recipe that does not exist
     const nonExistentRecipeId = 9999;
 
     const res = await agent.delete(`/recipes/${nonExistentRecipeId}`);
