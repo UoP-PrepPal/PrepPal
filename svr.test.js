@@ -86,7 +86,7 @@ describe("Viewing Recipes", () => {  // Test suite for viewing recipes
 
 
 describe("Adding Recipes", () => {
-  test("addRecipe should return success status 200 when adding a recipe while logged in and entering correct info", async () => {
+  test("recipes should return success status 200 when adding a recipe while logged in and entering correct info", async () => {
     const agent = request.agent(app);
 
     // Simulating a user sign-in
@@ -119,7 +119,7 @@ describe("Adding Recipes", () => {
     expect(deleteRes.body.message).toBe("Recipe deleted successfully");
   });
   
-  test("addRecipe should return error status 404 when attempting to add a recipe while not logged in", async () => {
+  test("recipes should return error status 404 when attempting to add a recipe while not logged in", async () => {
     const recipeData = {
       name: "Test Recipe",
       ingredients: ["Eggs", "Flour"],
@@ -131,6 +131,44 @@ describe("Adding Recipes", () => {
       .send(recipeData);
 
     expect(res.statusCode).toBe(404);
+  });
+});
+
+describe("Deleting Recipes", () => {
+  test("recipes should return success status 200 and delete a recipe when logged in and the recipe belongs to the user", async () => {
+    const agent = request.agent(app);
+
+    // Simulating a user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Adding a recipe to delete later
+    const recipeData = {
+      user_id: 5, 
+      name: "Recipe to Delete",
+      description: "A test recipe that should not be here.",
+      instructions: "Delete.",
+      est_time_min: 15,
+      ingredients: "Nothing",
+    };
+
+    const addRes = await agent.post("/recipes").send(recipeData);
+
+    // Ensuring the recipe was added successfully
+    expect(addRes.statusCode).toBe(201);
+    expect(addRes.body.message).toBe("Recipe added successfully");
+    expect(addRes.body).toHaveProperty("id");
+
+    // Retrieving the recipe ID
+    const recipeId = addRes.body.id;
+
+    // Deleting the recipe
+    const deleteRes = await agent.delete(`/recipes/${recipeId}`);
+
+    expect(deleteRes.statusCode).toBe(200);
+    expect(deleteRes.body.message).toBe("Recipe deleted successfully");
   });
 });
 
