@@ -187,6 +187,12 @@ describe("Deleting Recipes", () => {
     expect(res.statusCode).toBe(404);
     expect(res.body.error).toBe("Recipe not found or unauthorized");
   });
+
+  test("recipes should return error status 401 when attempting to delete a recipe while not logged in", async () => {
+    const res = await request(app).delete("/recipes/1");  // Attempting to delete a recipe without first logging in
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("Unauthorized");
+  });
 });
 
 describe("Viewing others' Recipes", () => {
