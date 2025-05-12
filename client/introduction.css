@@ -430,4 +430,5 @@ input:focus, select:focus {
 #signin-error {
     color: rgb(174, 14, 14);
     width: 70%;
+    max-width: 30vw;
 }
