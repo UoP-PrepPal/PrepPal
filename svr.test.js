@@ -112,7 +112,7 @@ describe("Adding Recipes", () => {
     expect(res.body.message).toBe("Recipe added successfully");
     expect(res.body).toHaveProperty("id"); // Ensure the response contains the recipe ID
 
-    // Cleanup: Delete the added recipe
+    // Deleting the added recipe
     const recipeId = res.body.id;
     const deleteRes = await agent.delete(`/recipes/${recipeId}`);
     expect(deleteRes.statusCode).toBe(200);
@@ -131,6 +131,31 @@ describe("Adding Recipes", () => {
       .send(recipeData);
 
     expect(res.statusCode).toBe(404);
+  });
+
+  test("recipes should return error status 400 when attempting to add a recipe with a missing name", async () => {
+    const agent = request.agent(app);
+
+    // Simulating a user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Invalid recipe data with a missing name
+    const recipeData = {
+      user_id: 5,
+      description: "A recipe without a name",
+      instructions: "Ride into town on your horse with no name.",
+      est_time_min: 20,
+      ingredients: "Westerns, Cowboys",
+    };
+
+    // Attempting to add the recipe
+    const res = await agent.post("/recipes").send(recipeData);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe("Missing required fields");
   });
 });
 
@@ -190,7 +215,7 @@ describe("Editing Recipes", () => {
     expect(updatedRecipe.est_time_min).toBe(updatedRecipeData.est_time_min);
     expect(updatedRecipe.ingredients).toBe(updatedRecipeData.ingredients);
 
-    // Cleanup: Delete the edited recipe
+    // Deleting the edited recipe
     const deleteRes = await agent.delete(`/recipes/${recipeId}`);
     expect(deleteRes.statusCode).toBe(200);
     expect(deleteRes.body.message).toBe("Recipe deleted successfully");
