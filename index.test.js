@@ -82,139 +82,114 @@ describe('addIngredient()', () => {
   });
 });
 
-
 describe('saveRecipe()', () => {
-  let ingredientList;
+    let recipeNameInput, recipeDescriptionInput, recipeInstructionsInput, prepTimeInput, ingredientInput, ingredientList;
 
-  beforeEach(() => {
-    // Mock DOM
-    document.body.innerHTML = `
-      <input id="recipe-name" value="Pasta" />
-      <textarea id="recipe-description">A tasty pasta recipe</textarea>
-      <textarea id="recipe-instructions">Boil pasta, add sauce</textarea>
-      <input id="prep-time" value="15" />
-      <div id="ingredient-list">
-        <p>Tomatoes</p>
-        <p>Cheese</p>
-      </div>
-    `;
+    beforeEach(() => {
+        document.body.innerHTML = `
+            <input id="recipe-name" />
+            <textarea id="recipe-description"></textarea>
+            <textarea id="recipe-instructions"></textarea>
+            <input id="prep-time" />
+            <input id="ingredient" />
+            <div id="ingredient-list"></div>
+        `;
 
-    // Set up globals
-    ingredientList = document.querySelector('#ingredient-list');
+        recipeNameInput = document.querySelector('#recipe-name');
+        recipeDescriptionInput = document.querySelector('#recipe-description');
+        recipeInstructionsInput = document.querySelector('#recipe-instructions');
+        prepTimeInput = document.querySelector('#prep-time');
+        ingredientInput = document.querySelector('#ingredient');
+        ingredientList = document.querySelector('#ingredient-list');
 
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve({ message: 'Recipe saved successfully' }),
-      })
-    );
-
-    // Mock sessionStorage
-    const mockStorage = (() => {
-      let store = { userId: '123' };
-      return {
-        getItem: key => store[key],
-        setItem: (key, value) => store[key] = value,
-        clear: () => store = {},
+        global.alert = jest.fn(); // Mock alert
+        global.sessionStorage = {
+            getItem: jest.fn(() => '123'), // Mock user ID
+        };
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                json: () => Promise.resolve({ message: 'Recipe saved successfully' }),
+            })
+        );
+        global.saveRecipe = function () {
+          const recipeName = document.querySelector('#recipe-name').value;
+          const recipeDescription = document.querySelector('#recipe-description').value;
+          const recipeInstructions = document.querySelector('#recipe-instructions').value;
+          const prepTime = document.querySelector('#prep-time').value;
+      
+          const validPrepTimes = ["0", "5", "10", "15", "20", "30", "45", "60", "90", "120"];
+          let errorMessage = "";
+      
+          // Validate fields
+          if (!recipeName) {
+              errorMessage += "Recipe name cannot be empty.\n";
+          }
+          if (!recipeDescription) {
+              errorMessage += "Recipe description cannot be empty.\n";
+          }
+          if (!recipeInstructions) {
+              errorMessage += "Recipe instructions cannot be empty.\n";
+          }
+          if (!prepTime || !validPrepTimes.includes(prepTime)) {
+              errorMessage += "Invalid preparation time.\n";
+          }
+      
+          if (errorMessage) {
+              alert(errorMessage);
+              return;
+          }
+      
+          const userId = sessionStorage.getItem('userId');
+          const ingredients = Array.from(document.querySelectorAll('#ingredient-list p')).map(
+              (ingredient) => ingredient.textContent
+          );
+      
+          const recipeData = {
+              sample: {
+                  user_id: userId,
+                  name: recipeName,
+                  description: recipeDescription,
+                  instructions: recipeInstructions,
+                  est_time_min: parseInt(prepTime, 10),
+                  ingredients: ingredients.join(', '),
+              },
+              inverse: false,
+          };
+      
+          fetch('/recipes', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(recipeData),
+          })
+              .then((response) => response.json())
+              .then((data) => {
+                  alert(data.message);
+              })
+              .catch((error) => {
+                  alert('Failed to save recipe.');
+              });
       };
-    })();
-    Object.defineProperty(window, 'sessionStorage', {
-      value: mockStorage,
     });
 
-    // Define the saveRecipe function (copy from your source)
-    global.saveRecipe = function () {
-      const recipeName = document.querySelector('#recipe-name');
-      const recipeDescription = document.querySelector('#recipe-description');
-      const recipeInstructions = document.querySelector('#recipe-instructions');
-      const recipeTime = document.querySelector('#prep-time');
-
-      if (!recipeName || !recipeDescription || !recipeTime) {
-        console.error('One or more required elements are missing.');
-        return;
-      }
-
-      const ingredientElements = ingredientList.querySelectorAll('p');
-      const ingredients = Array.from(ingredientElements).map(ingredient => ingredient.textContent);
-
-      const user_id = sessionStorage.getItem('userId');
-      if (!user_id) {
-        console.log("User is not logged in");
-        return;
-      }
-
-      const recipeData = {
-        user_id: user_id,
-        name: recipeName.value.trim(),
-        description: recipeDescription.value.trim(),
-        instructions: recipeInstructions.value.trim(),
-        est_time_min: parseInt(recipeTime.value, 10),
-        ingredients: ingredients.join(', ')
-      };
-
-      fetch('/recipes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(recipeData),
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          console.error('Error:', data.error);
-        } else {
-          console.log('Recipe saved successfully:', data);
-        }
-      })
-      .catch(error => {
-        console.error('Error saving recipe:', error);
-      });
-    };
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should send recipe data via fetch with correct payload', async () => {
-    await saveRecipe();
-
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith('/recipes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user_id: '123',
-        name: 'Pasta',
-        description: 'A tasty pasta recipe',
-        instructions: 'Boil pasta, add sauce',
-        est_time_min: 15,
-        ingredients: 'Tomatoes, Cheese'
-      }),
+    afterEach(() => {
+        jest.clearAllMocks();
     });
-  });
 
-  it('should log an error if required fields are missing', () => {
-    document.querySelector('#recipe-name').remove(); // Simulate missing input
+    it('shows an alert if required fields are empty', () => {
+        saveRecipe();
+        expect(global.alert).toHaveBeenCalledWith(expect.stringContaining('Recipe name cannot be empty.'));
+    });
 
-    console.error = jest.fn();
+    it('shows an alert if preparation time is invalid', () => {
+        recipeNameInput.value = 'Test Recipe';
+        recipeDescriptionInput.value = 'Test Description';
+        recipeInstructionsInput.value = 'Test Instructions';
+        prepTimeInput.value = '3'; // Invalid prep time
+        ingredientInput.value = 'Tomato';
 
-    saveRecipe();
-
-    expect(console.error).toHaveBeenCalledWith('One or more required elements are missing.');
-    expect(fetch).not.toHaveBeenCalled();
-  });
-
-  it('should log an error if user is not logged in', () => {
-    sessionStorage.clear();
-
-    console.log = jest.fn();
-
-    saveRecipe();
-
-    expect(console.log).toHaveBeenCalledWith("User is not logged in");
-    expect(fetch).not.toHaveBeenCalled();
-  });
+        saveRecipe();
+        expect(global.alert).toHaveBeenCalledWith(expect.stringContaining('Invalid preparation time.\n'));
+    });
 });

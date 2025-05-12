@@ -151,15 +151,64 @@ function addIngredient() {
 
 // Save a new recipe to the backend
 function saveRecipe() {
-    const recipeName = document.querySelector('#recipe-name');
-    const recipeDescription = document.querySelector('#recipe-description');
-    const recipeInstructions = document.querySelector('#recipe-instructions');
-    const recipeTime = document.querySelector('#prep-time');
+    const recipeName = document.querySelector('#recipe-name').value;
+    const recipeDescription = document.querySelector('#recipe-description').value;
+    const recipeInstructions = document.querySelector('#recipe-instructions').value;
+    const recipeTime = document.querySelector('#prep-time').value;
+    const prepTime = document.querySelector('#prep-time').value;
+    const ingredientEntry = document.querySelector('#ingredient').value;
 
-    if (!recipeName || !recipeDescription || !recipeTime) {
-        console.error('One or more required elements are missing.');
-        return;
+    const validPrepTimes = ["0", "5", "10", "15", "20", "30", "45", "60", "90", "120"];
+
+    let errorMessage = "";
+
+    // empty fields
+    if (!recipeName) {
+        errorMessage += "Recipe name cannot be empty.\n";
     }
+
+    if (!recipeDescription) {
+        errorMessage += "Recipe description cannot be empty.\n";
+    }
+
+    if (!recipeInstructions) {
+        errorMessage += "Recipe instructions cannot be empty.\n";
+    }
+
+    if (!prepTime) {
+        errorMessage += "Preparation time must be selected.\n";
+    }
+
+    if (!ingredientEntry) {
+        errorMessage += "Ingredient entry cannot be empty.\n";
+    }
+
+    // over character limit
+    if (recipeName.length > 100) {
+        errorMessage += "Recipe name cannot exceed 100 characters.\n";
+    }
+
+    if (recipeDescription.length > 500) {
+        errorMessage += "Recipe description cannot exceed 500 characters.\n";
+    }
+
+    if (recipeInstructions.length > 2000) {
+        errorMessage += "Recipe instructions cannot exceed 2000 characters.\n";
+    }
+
+    if (!validPrepTimes.includes(prepTime)) {
+        errorMessage += "Preparation time must be one of the predefined options.\n";
+    }
+
+    if (ingredientEntry.length > 100) {
+        errorMessage += "Ingredient entry cannot exceed 100 characters.\n";
+    }
+    
+    if (errorMessage) {
+        alert(errorMessage);
+        return
+    }
+
 
     const ingredientElements = ingredientList.querySelectorAll('p');
     const ingredients = Array.from(ingredientElements).map(ingredient => ingredient.textContent);
@@ -200,6 +249,58 @@ function saveRecipe() {
         console.error('Error saving recipe:', error);
     });
 }
+
+
+// function saveRecipe() {
+//     const recipeName = document.querySelector('#recipe-name');
+//     const recipeDescription = document.querySelector('#recipe-description');
+//     const recipeInstructions = document.querySelector('#recipe-instructions');
+//     const recipeTime = document.querySelector('#prep-time');
+
+//     if (!recipeName || !recipeDescription || !recipeTime) {
+//         console.error('One or more required elements are missing.');
+//         return;
+//     }
+
+//     const ingredientElements = ingredientList.querySelectorAll('p');
+//     const ingredients = Array.from(ingredientElements).map(ingredient => ingredient.textContent);
+
+//     const user_id = sessionStorage.getItem('userId');
+//     if (!user_id) {
+//         console.log("User is not logged in");
+//         return;
+//     }
+
+//     const recipeData = {
+//         user_id: user_id,
+//         name: recipeName.value.trim(),
+//         description: recipeDescription.value.trim(),
+//         instructions: recipeInstructions.value.trim(),
+//         est_time_min: parseInt(recipeTime.value, 10),
+//         ingredients: ingredients.join(', ')
+//     };
+
+//     console.log('Recipe Data:', recipeData);
+
+//     fetch('/recipes', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(recipeData),
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.error) {
+//             console.error('Error:', data.error);
+//         } else {
+//             console.log('Recipe saved successfully:', data);
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error saving recipe:', error);
+//     });
+// }
 
 // Create a new user account
 function createAccount() {
