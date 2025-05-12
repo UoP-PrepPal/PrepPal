@@ -196,6 +196,23 @@ describe("Editing Recipes", () => {
     expect(deleteRes.body.message).toBe("Recipe deleted successfully");
   });
 
+  test("recipes should return error status 401 when attempting to edit a recipe while not logged in", async () => {
+    // Attempting to edit a recipe without logging in
+    const recipeId = 84; 
+    const updatedRecipeData = {
+      name: "Unauthorized Edit",
+      description: "This edit should fail",
+      instructions: "No instructions",
+      est_time_min: 15,
+      ingredients: "None",
+    };
+
+    const res = await request(app).put(`/recipes/${recipeId}`).send(updatedRecipeData);
+
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("Unauthorized");
+  });
+
   test("recipes should return error status 404 when attempting to edit a non-existent recipe", async () => {
     const agent = request.agent(app);
 
