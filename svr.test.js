@@ -167,13 +167,38 @@ describe("Adding Recipes", () => {
       email: "testing@testing.com",
     });
 
-    // Invalid recipe data with a missing description
+    // Invalid recipe data without instructions
     const recipeData = {
       user_id: 5,
       name: "Recipe without Instructions",
       description: "A recipe where you.. cook?",
       est_time_min: 20,
       ingredients: "Mystery, Secrets",
+    };
+
+    // Attempting to add the recipe
+    const res = await agent.post("/recipes").send(recipeData);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe("Missing required fields");
+  });
+
+    test("recipes should return error status 400 when attempting to add a recipe without an estimated time", async () => {
+    const agent = request.agent(app);
+
+    // Simulating a user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Invalid recipe data without an estimated time
+    const recipeData = {
+      user_id: 5,
+      name: "Recipe without an estimated time",
+      description: "A recipe where you cook.",
+      instructions: "Put it in the oven for...?",
+      ingredients: "The concept of time",
     };
 
     // Attempting to add the recipe
