@@ -66,4 +66,18 @@ describe('addIngredient()', () => {
     expect(items.length).toBe(0);
     expect(console.log).toHaveBeenCalledWith("Cannot add empty ingredient value");
   });
+
+  it('removes an ingredient when delete button is clicked', () => {
+    ingredientInput.value = 'Onions';
+    addIngredient();
+
+    let items = document.querySelectorAll('.ingredient-item');
+    expect(items.length).toBe(1);
+
+    const deleteBtn = items[0].querySelector('button');
+    deleteBtn.click();
+
+    items = document.querySelectorAll('.ingredient-item');
+    expect(items.length).toBe(0);
+  });
 });
