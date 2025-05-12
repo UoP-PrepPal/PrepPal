@@ -48,6 +48,6 @@ Contents
 --------
 
 .. toctree::
-   Features
+   features
    Scope 
-   Setup
+   setup
