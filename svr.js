@@ -97,6 +97,16 @@ app.post('/signup', async (req, res) => {
 
     const db = await dbPromise;
 
+    // Check if the account already exists
+    const existingUser = await db.get(
+      'SELECT * FROM users WHERE username = ? OR email = ?',
+      [username, email]
+    );
+
+    if (existingUser) {
+      return res.status(409).json({ error: 'Account already exists' });
+    }
+
     // Insert new user into the database
     const result = await db.run(
       `INSERT INTO users (username, email, first_name, last_name)
