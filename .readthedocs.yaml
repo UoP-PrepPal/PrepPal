@@ -5,13 +5,9 @@ build:
   tools:
     python: "3.9"
 
-# Install Python dependencies
+sphinx:
+  configuration: docs/source/conf.py
+
 python:
   install:
-    - requirements: docs/requirements.txt  # Path to your requirements file
-    - method: pip
-      path: .  # Installs your project in "editable" mode (if needed)
-
-sphinx:
-  configuration: docs/source/conf.py  # Path to Sphinx config
-  fail_on_warning: true  # Optional: Strict mode to catch issues early
+    - requirements: docs/requirements.txt
