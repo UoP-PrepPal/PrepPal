@@ -17,6 +17,21 @@ describe("Signing Up", () => {  // Test suite for entering user details for sign
     expect(res.body.error).toContain("Missing required fields");
   });
 
+  test("signup should return error status 409 for attempting to sign up with an existing account", async () => {
+    const res = await request(app)
+      .post("/signup")
+      
+      // Test data attempting to create an account with an existing username
+      .send({
+        username: "testing",
+        email: "new@testing.com",
+        first_name: "Ing",
+        last_name: "Test",
+      });
+    
+    expect(res.statusCode).toBe(409);
+    expect(res.body.error).toBe("Account already exists");
+    });
 });
 
 
