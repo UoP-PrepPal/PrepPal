@@ -251,6 +251,22 @@ describe("Deleting Recipes", () => {
     expect(res.body.error).toBe("Recipe not found or unauthorized");
   });
 
+  test("recipes should return error status 401 when attempting to delete a recipe with a user that does not exist", async () => {
+    const agent = request.agent(app);
+
+    // Simulating a user sign-in
+    await agent.post("/signIn").send({
+      username: "non-existent-user",
+      email: "non-existent@testing.com",
+    });
+
+    const recipeID = 1;
+
+    const res = await agent.delete(`/recipes/${recipeID}`);
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("Unauthorized");
+  });
+
   test("recipes should return error status 401 when attempting to delete a recipe while not logged in", async () => {
     const res = await request(app).delete("/recipes/1");  // Attempting to delete a recipe without first logging in
     expect(res.statusCode).toBe(401);
