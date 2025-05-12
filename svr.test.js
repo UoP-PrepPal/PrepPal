@@ -195,6 +195,31 @@ describe("Editing Recipes", () => {
     expect(deleteRes.statusCode).toBe(200);
     expect(deleteRes.body.message).toBe("Recipe deleted successfully");
   });
+
+  test("recipes should return error status 404 when attempting to edit a non-existent recipe", async () => {
+    const agent = request.agent(app);
+
+    // Simulating user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Attempting to edit a recipe that does not exist
+    const nonExistentRecipeId = 9999;
+    const updatedRecipeData = {
+      name: "Recipe that does not Exist",
+      description: "This recipe does not exist",
+      instructions: "No instructions",
+      est_time_min: 10,
+      ingredients: "None",
+    };
+
+    const res = await agent.put(`/recipes/${nonExistentRecipeId}`).send(updatedRecipeData);
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body.error).toBe("Recipe not found or unauthorized");
+  });
 });
 
 describe("Deleting Recipes", () => {
