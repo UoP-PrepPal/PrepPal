@@ -9,13 +9,6 @@ npm installs I used:
 */ 
 
 describe("Signing Up", () => {  // Test suite for entering user details for sign up
-  test("signup should return error status 400 for attempting to sign up with missing fields", async () => {
-    const res = await request(app)
-      .post("/signup")
-      .send({ username: "testuser" }); // Test data with missing fields for sign up
-    expect(res.statusCode).toBe(400);
-    expect(res.body.error).toContain("Missing required fields");
-  });
 
   test("signup should return error status 409 for attempting to sign up with an existing account", async () => {
     const res = await request(app)
@@ -33,7 +26,7 @@ describe("Signing Up", () => {  // Test suite for entering user details for sign
     expect(res.body.error).toBe("Account already exists");
     });
 
-    test("signup should return error status 409 for attempting to sign up with an existing email", async () => {
+  test("signup should return error status 409 for attempting to sign up with an existing email", async () => {
     const res = await request(app)
       .post("/signup")
       
@@ -47,7 +40,67 @@ describe("Signing Up", () => {  // Test suite for entering user details for sign
     
     expect(res.statusCode).toBe(409);
     expect(res.body.error).toBe("Account already exists");
-    });
+  });
+
+  test("signup should return error status 400 for attempting to sign up without a username", async () => {
+    const res = await request(app)
+      .post("/signup")
+      
+      // Test data attempting to create an account without a username
+      .send({ 
+        email: "testing@testing.com",
+        first_name: "Test",
+        last_name: "Ing",
+      }); 
+    
+      expect(res.statusCode).toBe(400);
+    expect(res.body.error).toContain("Missing required fields");
+  });
+
+  test("signup should return error status 400 for attempting to sign up without an email", async () => {
+    const res = await request(app)
+      .post("/signup")
+      
+      // Test data attempting to create an account without an email
+      .send({ 
+        username: "testing",
+        first_name: "Test",
+        last_name: "Ing",
+      }); 
+    
+      expect(res.statusCode).toBe(400);
+    expect(res.body.error).toContain("Missing required fields");
+  });
+
+  test("signup should return error status 400 for attempting to sign up without a first name", async () => {
+    const res = await request(app)
+      .post("/signup")
+      
+      // Test data attempting to create an account without a first name
+      .send({ 
+        username: "testing",
+        email: "testing@testing.com",
+        last_name: "Ing",
+      }); 
+    
+      expect(res.statusCode).toBe(400);
+    expect(res.body.error).toContain("Missing required fields");
+  });
+
+  test("signup should return error status 400 for attempting to sign up without a last name", async () => {
+    const res = await request(app)
+      .post("/signup")
+      
+      // Test data attempting to create an account without a last name
+      .send({ 
+        username: "testing",
+        email: "testing@testing.com",
+        first_name: "Test",
+      }); 
+    
+      expect(res.statusCode).toBe(400);
+    expect(res.body.error).toContain("Missing required fields");
+  });
 });
 
 
