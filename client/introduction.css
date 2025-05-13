@@ -239,7 +239,7 @@ label {
     text-align: left;
 }
 
-input[type="text"], select {
+input[type="text"], select, textarea {
     width: 100%;
     padding: 12px;
     margin-top: 5px;
