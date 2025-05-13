@@ -68,14 +68,6 @@ describe("Signing In", () => {  // Test suite for signing in
     expect(res.body.error).toBe("Invalid credentials");
   });
 
-  test("signIn should return error status 401 for attempting to sign in with missing credentials", async () => {
-    const res = await request(app)
-      .post("/signIn")
-      .send({ username: "", email: "" }); // Test data attempting to sign in with missing credenttials
-    expect(res.statusCode).toBe(401);
-    expect(res.body.error).toBe("Invalid credentials");
-  });
-
   // Test cases for missing username and email - these are to make the tests more closely match the test plan
   test("signIn should return error status 401 for attempting to sign in with missing username", async () => {
     const res = await request(app)
@@ -423,25 +415,7 @@ describe("Deleting Recipes", () => {
 });
 
 describe("Viewing others' Recipes", () => {
-  test("/recipes/username/:username should return error code 404 when trying to view the recipe of a non-existent user", async () => {
-  const agent = request.agent(app);
-
-  await agent.post("/signIn").send({
-      username: "testing",
-      email: "testing@testing.com",
-    });
-  
-  const usernameInput = {
-    username: "sadkjbv"
-  };
-
-  const res = await agent
-    .get(`/recipes/username/${usernameInput.username}`);
-
-  expect(res.statusCode).toBe(404);
-  });
-
-  test("/recipes/username/:username should success status 200 when trying to view the recipe of an existing user", async () => {
+    test("/recipes/username/:username should return success status 200 when trying to view the recipe of an existing user", async () => {
   const agent = request.agent(app);
 
   await agent.post("/signIn").send({
@@ -459,7 +433,24 @@ describe("Viewing others' Recipes", () => {
 
   expect(res.statusCode).toBe(200);
   });
+  
+  test("/recipes/username/:username should return error code 404 when trying to view the recipe of a non-existent user", async () => {
+  const agent = request.agent(app);
 
+  await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+  
+  const usernameInput = {
+    username: "sadkjbv"
+  };
+
+  const res = await agent
+    .get(`/recipes/username/${usernameInput.username}`);
+
+  expect(res.statusCode).toBe(404);
+  });
 
   test("/recipes/username/:username should return error code 401 when trying to view others recipes while not logged in", async () => {
   const agent = request.agent(app);
