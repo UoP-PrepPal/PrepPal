@@ -113,10 +113,18 @@ describe("Signing In", () => {  // Test suite for signing in
     expect(res.body.message).toBe("User signed in successfully");
   });
 
-  test("signIn should return error status 401 for attempting to sign in with invalid credentials", async () => {
+  test("signIn should return error status 401 for attempting to sign in with invalid username", async () => {
     const res = await request(app)
       .post("/signIn")
-      .send({ username: "invalid", email: "invalid@invalid.com" }); // Test data attempting to sign in with a non-existent account
+      .send({ username: "invalid", email: "testing@testing.com" }); // Test data attempting to sign in with an invalid username
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("Invalid credentials");
+  });
+
+  test("signIn should return error status 401 for attempting to sign in with invalid email", async () => {
+    const res = await request(app)
+      .post("/signIn")
+      .send({ username: "testing", email: "invalid@invalid.com" }); // Test data attempting to sign in with an invalid email
     expect(res.statusCode).toBe(401);
     expect(res.body.error).toBe("Invalid credentials");
   });
