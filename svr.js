@@ -116,7 +116,7 @@ app.post('/signup', async (req, res) => {
 
     res.status(201).json({
       message: 'User added successfully',
-      id: result.lastInsertRowid,
+      id: result.lastID,
     });
   } catch (error) {
     console.log('Error adding user:', error);

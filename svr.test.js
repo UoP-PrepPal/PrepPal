@@ -9,6 +9,35 @@ npm installs I used:
 */ 
 
 describe("Signing Up", () => {  // Test suite for entering user details for sign up
+  test("signup should return success status 201 for successfully creating a new account", async () => {
+    const agent = request.agent(app);
+
+    // Valid user data for signing up
+    const userData = {
+      username: "signup_3",
+      email: "signup3@signup.com",
+      first_name: "Sign",
+      last_name: "Up",
+    };
+
+    // Creating the new account
+    const signupRes = await agent.post("/signup").send(userData);
+    expect(signupRes.statusCode).toBe(201);
+    expect(signupRes.body.message).toBe("User added successfully");
+    expect(signupRes.body).toHaveProperty("id");
+
+    // Attempting to sign in with the new account
+    const signInRes = await agent.post("/signIn").send({
+      username: userData.username,
+      email: userData.email,
+    });
+    expect(signInRes.statusCode).toBe(200);
+
+    // Deleting the account
+    const deleteRes = await agent.delete("/account");
+    expect(deleteRes.statusCode).toBe(200);
+    expect(deleteRes.body.message).toBe("Account and all recipes deleted successfully");
+  });
 
   test("signup should return error status 409 for attempting to sign up with an existing account", async () => {
     const res = await request(app)
