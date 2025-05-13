@@ -176,6 +176,28 @@ describe("Signing In", () => {  // Test suite for signing in
   });
 });
 
+describe("Dashboard Access", () => {  // Test suite for accessing the dashboard page
+  test("dashboard should return success status 200 if accessing dashboard while user is logged in", async () => {
+    const agent = request.agent(app); 
+
+    // Simulating a user sign in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    const res = await agent.get("/dashboard");  // Attempting to access the dashboard while logged in
+    expect(res.statusCode).toBe(200);
+    expect(res.headers["content-type"]).toContain("text/html");
+  });
+  
+  test("dashboard should return error status 401 if attempting to access dashboard while user is not logged in", async () => {
+    const res = await request(app).get("/dashboard");  // Attempting to access the dashboard without first logging in
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("You must be logged in to view the dashboard");
+  });
+});
+
 describe("Viewing Recipes", () => {  // Test suite for viewing recipes
   test("recipes should return success status 200 when viewing recipes while logged in", async () => {
     const agent = request.agent(app);
@@ -199,7 +221,7 @@ describe("Viewing Recipes", () => {  // Test suite for viewing recipes
 
 
 describe("Adding Recipes", () => {
-  test("recipes should return success status 200 when adding a recipe while logged in and entering correct info", async () => {
+  test("recipes should return success status 201 when adding a recipe while logged in and entering correct info", async () => {
     const agent = request.agent(app);
 
     // Simulating a user sign-in
@@ -577,29 +599,6 @@ describe("Logging Out", () => {
     const res = await request(app).post("/logout");  // Attempting to log out while not logged in
     expect(res.statusCode).toBe(500);
     expect(res.body.error).toBe("Failed to log out");
-  });
-});
-
-
-describe("Dashboard Access", () => {  // Test suite for accessing the dashboard page
-  test("dashboard should return success status 200 if accessing dashboard while user is logged in", async () => {
-    const agent = request.agent(app); 
-
-    // Simulating a user sign in
-    await agent.post("/signIn").send({
-      username: "testing",
-      email: "testing@testing.com",
-    });
-
-    const res = await agent.get("/dashboard");  // Attempting to access the dashboard while logged in
-    expect(res.statusCode).toBe(200);
-    expect(res.headers["content-type"]).toContain("text/html");
-  });
-  
-  test("dashboard should return error status 401 if attempting to access dashboard while user is not logged in", async () => {
-    const res = await request(app).get("/dashboard");  // Attempting to access the dashboard without first logging in
-    expect(res.statusCode).toBe(401);
-    expect(res.body.error).toBe("You must be logged in to view the dashboard");
   });
 });
 
