@@ -32,6 +32,22 @@ describe("Signing Up", () => {  // Test suite for entering user details for sign
     expect(res.statusCode).toBe(409);
     expect(res.body.error).toBe("Account already exists");
     });
+
+    test("signup should return error status 409 for attempting to sign up with an existing email", async () => {
+    const res = await request(app)
+      .post("/signup")
+      
+      // Test data attempting to create an account with an existing email
+      .send({
+        username: "new_testing",
+        email: "testing@testing.com",
+        first_name: "Ing",
+        last_name: "Test",
+      });
+    
+    expect(res.statusCode).toBe(409);
+    expect(res.body.error).toBe("Account already exists");
+    });
 });
 
 
