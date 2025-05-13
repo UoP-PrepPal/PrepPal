@@ -290,25 +290,6 @@ app.get('/recipes/username/:username', async (req, res) => {
   }
 });
 
-// Route to get account information for the logged-in user
-app.get('/account', async (req, res) => {
-  if (!req.session.userId) {
-    return res.status(401).json({ error: 'You must be logged in to view account information' });
-  }
-
-  const db = await dbPromise;
-  const user = await db.get('SELECT username, email FROM users WHERE user_id = ?', [req.session.userId]);
-
-  if (user) {
-    res.status(200).json({
-      username: user.username,
-      email: user.email
-    });
-  } else {
-    res.status(404).json({ error: 'User not found' });
-  }
-});
-
 // Start server on specified port
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
