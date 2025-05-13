@@ -1,7 +1,7 @@
 PrepPal - Your Simple Meal Helper
 =================================
 
-PrepPal helps you organize recipes quickly without complicated features.
+PrepPal helps you organize recipes quickly and effortlessly — without unnecessary complexity.
 
 Why PrepPal?
 -----------
