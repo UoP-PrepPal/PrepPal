@@ -116,11 +116,43 @@ app.post('/signup', async (req, res) => {
 
     res.status(201).json({
       message: 'User added successfully',
-      id: result.lastInsertRowid,
+      id: result.lastID,
     });
   } catch (error) {
     console.log('Error adding user:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Route: Delete the logged-in user's account and their recipes
+app.delete('/account', async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const db = await dbPromise;
+
+    // Delete all recipes belonging to the user
+    await db.run('DELETE FROM recipes WHERE user_id = ?', [req.session.userId]);
+
+    // Delete the user account
+    const result = await db.run('DELETE FROM users WHERE user_id = ?', [req.session.userId]);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Destroy the session after deleting the account
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Account deleted, but failed to log out' });
+      }
+      res.status(200).json({ message: 'Account and all recipes deleted successfully' });
+    });
+  } catch (error) {
+    console.error('Error deleting account:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

@@ -9,12 +9,34 @@ npm installs I used:
 */ 
 
 describe("Signing Up", () => {  // Test suite for entering user details for sign up
-  test("signup should return error status 400 for attempting to sign up with missing fields", async () => {
-    const res = await request(app)
-      .post("/signup")
-      .send({ username: "testuser" }); // Test data with missing fields for sign up
-    expect(res.statusCode).toBe(400);
-    expect(res.body.error).toContain("Missing required fields");
+  test("signup should return success status 201 for successfully creating a new account", async () => {
+    const agent = request.agent(app);
+
+    // Valid user data for signing up
+    const userData = {
+      username: "signup_3",
+      email: "signup3@signup.com",
+      first_name: "Sign",
+      last_name: "Up",
+    };
+
+    // Creating the new account
+    const signupRes = await agent.post("/signup").send(userData);
+    expect(signupRes.statusCode).toBe(201);
+    expect(signupRes.body.message).toBe("User added successfully");
+    expect(signupRes.body).toHaveProperty("id");
+
+    // Attempting to sign in with the new account
+    const signInRes = await agent.post("/signIn").send({
+      username: userData.username,
+      email: userData.email,
+    });
+    expect(signInRes.statusCode).toBe(200);
+
+    // Deleting the account
+    const deleteRes = await agent.delete("/account");
+    expect(deleteRes.statusCode).toBe(200);
+    expect(deleteRes.body.message).toBe("Account and all recipes deleted successfully");
   });
 
   test("signup should return error status 409 for attempting to sign up with an existing account", async () => {
@@ -32,6 +54,82 @@ describe("Signing Up", () => {  // Test suite for entering user details for sign
     expect(res.statusCode).toBe(409);
     expect(res.body.error).toBe("Account already exists");
     });
+
+  test("signup should return error status 409 for attempting to sign up with an existing email", async () => {
+    const res = await request(app)
+      .post("/signup")
+      
+      // Test data attempting to create an account with an existing email
+      .send({
+        username: "new_testing",
+        email: "testing@testing.com",
+        first_name: "Ing",
+        last_name: "Test",
+      });
+    
+    expect(res.statusCode).toBe(409);
+    expect(res.body.error).toBe("Account already exists");
+  });
+
+  test("signup should return error status 400 for attempting to sign up without a username", async () => {
+    const res = await request(app)
+      .post("/signup")
+      
+      // Test data attempting to create an account without a username
+      .send({ 
+        email: "testing@testing.com",
+        first_name: "Test",
+        last_name: "Ing",
+      }); 
+    
+      expect(res.statusCode).toBe(400);
+    expect(res.body.error).toContain("Missing required fields");
+  });
+
+  test("signup should return error status 400 for attempting to sign up without an email", async () => {
+    const res = await request(app)
+      .post("/signup")
+      
+      // Test data attempting to create an account without an email
+      .send({ 
+        username: "testing",
+        first_name: "Test",
+        last_name: "Ing",
+      }); 
+    
+      expect(res.statusCode).toBe(400);
+    expect(res.body.error).toContain("Missing required fields");
+  });
+
+  test("signup should return error status 400 for attempting to sign up without a first name", async () => {
+    const res = await request(app)
+      .post("/signup")
+      
+      // Test data attempting to create an account without a first name
+      .send({ 
+        username: "testing",
+        email: "testing@testing.com",
+        last_name: "Ing",
+      }); 
+    
+      expect(res.statusCode).toBe(400);
+    expect(res.body.error).toContain("Missing required fields");
+  });
+
+  test("signup should return error status 400 for attempting to sign up without a last name", async () => {
+    const res = await request(app)
+      .post("/signup")
+      
+      // Test data attempting to create an account without a last name
+      .send({ 
+        username: "testing",
+        email: "testing@testing.com",
+        first_name: "Test",
+      }); 
+    
+      expect(res.statusCode).toBe(400);
+    expect(res.body.error).toContain("Missing required fields");
+  });
 });
 
 
@@ -44,18 +142,18 @@ describe("Signing In", () => {  // Test suite for signing in
     expect(res.body.message).toBe("User signed in successfully");
   });
 
-  test("signIn should return error status 401 for attempting to sign in with invalid credentials", async () => {
+  test("signIn should return error status 401 for attempting to sign in with invalid username", async () => {
     const res = await request(app)
       .post("/signIn")
-      .send({ username: "invalid", email: "invalid@invalid.com" }); // Test data attempting to sign in with a non-existent account
+      .send({ username: "invalid", email: "testing@testing.com" }); // Test data attempting to sign in with an invalid username
     expect(res.statusCode).toBe(401);
     expect(res.body.error).toBe("Invalid credentials");
   });
 
-  test("signIn should return error status 401 for attempting to sign in with missing credentials", async () => {
+  test("signIn should return error status 401 for attempting to sign in with invalid email", async () => {
     const res = await request(app)
       .post("/signIn")
-      .send({ username: "", email: "" }); // Test data attempting to sign in with missing credenttials
+      .send({ username: "testing", email: "invalid@invalid.com" }); // Test data attempting to sign in with an invalid email
     expect(res.statusCode).toBe(401);
     expect(res.body.error).toBe("Invalid credentials");
   });
@@ -75,6 +173,28 @@ describe("Signing In", () => {  // Test suite for signing in
       .send({ username: "testing", email: "" }); // Test data attempting to sign in with missing email
     expect(res.statusCode).toBe(401);
     expect(res.body.error).toBe("Invalid credentials");
+  });
+});
+
+describe("Dashboard Access", () => {  // Test suite for accessing the dashboard page
+  test("dashboard should return success status 200 if accessing dashboard while user is logged in", async () => {
+    const agent = request.agent(app); 
+
+    // Simulating a user sign in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    const res = await agent.get("/dashboard");  // Attempting to access the dashboard while logged in
+    expect(res.statusCode).toBe(200);
+    expect(res.headers["content-type"]).toContain("text/html");
+  });
+  
+  test("dashboard should return error status 401 if attempting to access dashboard while user is not logged in", async () => {
+    const res = await request(app).get("/dashboard");  // Attempting to access the dashboard without first logging in
+    expect(res.statusCode).toBe(401);
+    expect(res.body.error).toBe("You must be logged in to view the dashboard");
   });
 });
 
@@ -101,7 +221,7 @@ describe("Viewing Recipes", () => {  // Test suite for viewing recipes
 
 
 describe("Adding Recipes", () => {
-  test("recipes should return success status 200 when adding a recipe while logged in and entering correct info", async () => {
+  test("recipes should return success status 201 when adding a recipe while logged in and entering correct info", async () => {
     const agent = request.agent(app);
 
     // Simulating a user sign-in
@@ -407,25 +527,7 @@ describe("Deleting Recipes", () => {
 });
 
 describe("Viewing others' Recipes", () => {
-  test("/recipes/username/:username should return error code 404 when trying to view the recipe of a non-existent user", async () => {
-  const agent = request.agent(app);
-
-  await agent.post("/signIn").send({
-      username: "testing",
-      email: "testing@testing.com",
-    });
-  
-  const usernameInput = {
-    username: "sadkjbv"
-  };
-
-  const res = await agent
-    .get(`/recipes/username/${usernameInput.username}`);
-
-  expect(res.statusCode).toBe(404);
-  });
-
-  test("/recipes/username/:username should success status 200 when trying to view the recipe of an existing user", async () => {
+    test("/recipes/username/:username should return success status 200 when trying to view the recipe of an existing user", async () => {
   const agent = request.agent(app);
 
   await agent.post("/signIn").send({
@@ -443,7 +545,24 @@ describe("Viewing others' Recipes", () => {
 
   expect(res.statusCode).toBe(200);
   });
+  
+  test("/recipes/username/:username should return error code 404 when trying to view the recipe of a non-existent user", async () => {
+  const agent = request.agent(app);
 
+  await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+  
+  const usernameInput = {
+    username: "sadkjbv"
+  };
+
+  const res = await agent
+    .get(`/recipes/username/${usernameInput.username}`);
+
+  expect(res.statusCode).toBe(404);
+  });
 
   test("/recipes/username/:username should return error code 401 when trying to view others recipes while not logged in", async () => {
   const agent = request.agent(app);
@@ -480,29 +599,6 @@ describe("Logging Out", () => {
     const res = await request(app).post("/logout");  // Attempting to log out while not logged in
     expect(res.statusCode).toBe(500);
     expect(res.body.error).toBe("Failed to log out");
-  });
-});
-
-
-describe("Dashboard Access", () => {  // Test suite for accessing the dashboard page
-  test("dashboard should return success status 200 if accessing dashboard while user is logged in", async () => {
-    const agent = request.agent(app); 
-
-    // Simulating a user sign in
-    await agent.post("/signIn").send({
-      username: "testing",
-      email: "testing@testing.com",
-    });
-
-    const res = await agent.get("/dashboard");  // Attempting to access the dashboard while logged in
-    expect(res.statusCode).toBe(200);
-    expect(res.headers["content-type"]).toContain("text/html");
-  });
-  
-  test("dashboard should return error status 401 if attempting to access dashboard while user is not logged in", async () => {
-    const res = await request(app).get("/dashboard");  // Attempting to access the dashboard without first logging in
-    expect(res.statusCode).toBe(401);
-    expect(res.body.error).toBe("You must be logged in to view the dashboard");
   });
 });
 
