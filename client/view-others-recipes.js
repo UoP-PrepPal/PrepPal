@@ -24,6 +24,7 @@ searchBtn.addEventListener('click', () => {
               <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
               <p><strong>Instructions:</strong> ${recipe.instructions}</p>
               <p><strong>Time:</strong> ${recipe.est_time_min} minutes</p>
+              <p><strong>Difficulty:</strong> ${recipe.difficulty || 'Not specified'}</p>
             `;
             userRecipesList.appendChild(recipeCard);
           });

@@ -42,9 +42,29 @@ if (recipesList) {
                             <textarea class="edit-instructions" disabled>${recipe.instructions}</textarea>
                             <input type="number" class="edit-time" value="${recipe.est_time_min}" disabled />
                             <textarea class="edit-ingredients" disabled>${recipe.ingredients}</textarea>
+                            <div class="difficulty-wrapper"></div>
                             <button class="edit-btn" data-id="${recipe.recipe_id}">Edit</button>
                             <button class="delete-btn" data-id="${recipe.recipe_id}">Delete</button>
                         `;
+
+                        const difficultySelect = document.createElement('select');
+                        difficultySelect.className = 'edit-difficulty';
+                        difficultySelect.disabled = true;
+
+                        const difficulties = ['Easy', 'Medium', 'Hard'];
+                        difficulties.forEach(level => {
+                            const option = document.createElement('option');
+                            option.value = level;
+                            option.textContent = level;
+                            if (recipe.difficulty === level) {
+                                option.selected = true;
+                            }
+                            difficultySelect.appendChild(option);
+                        });
+
+                        const difficultyWrapper = recipeCard.querySelector('.difficulty-wrapper');
+                        difficultyWrapper.appendChild(difficultySelect);
+
                         recipesList.appendChild(recipeCard);
                     });
                 }
@@ -83,7 +103,7 @@ if (recipesList) {
         if (target.classList.contains('edit-btn')) {
             const card = target.parentElement;
             const isEditing = target.textContent === 'Save';
-            const inputs = card.querySelectorAll('input, textarea');
+            const inputs = card.querySelectorAll('input, textarea, select');
 
             if (isEditing) {
                 // Save updated recipe
@@ -93,7 +113,8 @@ if (recipesList) {
                     description: card.querySelector('.edit-description').value.trim(),
                     instructions: card.querySelector('.edit-instructions').value.trim(),
                     est_time_min: parseInt(card.querySelector('.edit-time').value.trim(), 10),
-                    ingredients: card.querySelector('.edit-ingredients').value.trim()
+                    ingredients: card.querySelector('.edit-ingredients').value.trim(),
+                    difficulty: card.querySelector('.edit-difficulty').value.trim()
                 };
 
                 fetch(`/recipes/${recipeId}`, {
@@ -157,6 +178,7 @@ function saveRecipe() {
     const recipeTime = document.querySelector('#prep-time').value;
     const prepTime = document.querySelector('#prep-time').value;
     const ingredientEntry = document.querySelector('#ingredient').value;
+    const difficulty = document.querySelector('#difficulty').value;
 
     const validPrepTimes = ["0", "5", "10", "15", "20", "30", "45", "60", "90", "120"];
 
@@ -221,7 +243,8 @@ function saveRecipe() {
         description: recipeDescription.trim(),
         instructions: recipeInstructions.trim(),
         est_time_min: parseInt(recipeTime, 10),
-        ingredients: ingredients.join(', ')
+        ingredients: ingredients.join(', '),
+        difficulty: difficulty
     };
 
     console.log('Recipe Data:', recipeData);
