@@ -433,3 +433,10 @@ input:focus, select:focus {
     max-width: 30vw;
 }
 
+.dashboard-logo {
+    display: block;
+    margin: 0 auto;
+    max-width: 120px;
+    height: auto;
+    margin-bottom: 1rem;
+}
