@@ -201,6 +201,10 @@ function saveRecipe() {
         errorMessage += "Preparation time must be selected.\n";
     }
 
+    if (!difficulty) {
+        errorMessage += "Difficulty option must be selected.\n";
+    }
+
     // over character limit
     if (recipeName.length > 100) {
         errorMessage += "Recipe name cannot exceed 100 characters.\n";
