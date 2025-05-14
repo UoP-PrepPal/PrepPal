@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Info</title>
+    <link rel="stylesheet" href="introduction.css"> 
+</head>
+<body>
+    <div class="account-container">
+        <div class="account-box">
+            <div class="container">
+                <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+                 <h1>Account Info</h1>
+
+                <div class="account-details">
+                    <p><strong>Username:</strong> <span id="username">testing</span></p>
+                    <p><strong>Email:</strong> <span id="email">testing@testing.com</span></p>
+
+                    <h2>Description:</h2>
+                    <textarea id="description" placeholder="Enter a description..." rows="5" cols="40" style="resize: vertical; width: 100%; max-width: 500px;"></textarea>
+
+                    
+                    <button id="save-description" style="margin-top: 10px;">Save Description</button>
+                    <p id="save-status" style="color: green; display: none;">Description saved!</p>
+                </div>
+            </div>
+        </div>
+    </div>
