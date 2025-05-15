@@ -293,6 +293,31 @@ describe("Adding Recipes", () => {
     expect(res.body.error).toBe("Missing required fields");
   });
 
+  test("recipes should return error status 400 when attempting to add a recipe with a missing description", async () => {
+    const agent = request.agent(app);
+
+    // Simulating a user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Invalid recipe data with a missing description
+    const recipeData = {
+      user_id: 5,
+      name: "Recipe without a Description",
+      instructions: "Figure out some more details about this recipe.",
+      est_time_min: 20,
+      ingredients: "Vague, Unclear",
+    };
+
+    // Attempting to add the recipe
+    const res = await agent.post("/recipes").send(recipeData);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe("Missing required fields");
+  });
+
   test("recipes should return error status 400 when attempting to add a recipe without instructions", async () => {
     const agent = request.agent(app);
 
@@ -318,7 +343,7 @@ describe("Adding Recipes", () => {
     expect(res.body.error).toBe("Missing required fields");
   });
 
-    test("recipes should return error status 400 when attempting to add a recipe without an estimated time", async () => {
+  test("recipes should return error status 400 when attempting to add a recipe without an estimated time", async () => {
     const agent = request.agent(app);
 
     // Simulating a user sign-in
@@ -334,6 +359,31 @@ describe("Adding Recipes", () => {
       description: "A recipe where you cook.",
       instructions: "Put it in the oven for...?",
       ingredients: "The concept of time",
+    };
+
+    // Attempting to add the recipe
+    const res = await agent.post("/recipes").send(recipeData);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe("Missing required fields");
+  });
+
+  test("recipes should return error status 400 when attempting to add a recipe without any ingredients", async () => {
+    const agent = request.agent(app);
+
+    // Simulating a user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Invalid recipe data without ingredients
+    const recipeData = {
+      user_id: 5,
+      name: "Recipe without Ingredients",
+      description: "A recipe where you cook.",
+      instructions: "Put the ____ in the bowl with the ____, and stir.",
+      est_time_min: 20,
     };
 
     // Attempting to add the recipe

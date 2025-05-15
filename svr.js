@@ -51,7 +51,7 @@ app.post('/recipes', async (req, res) => {
     const { user_id, name, description, instructions, est_time_min, ingredients } = req.body;
 
     // Validate required fields
-    if (!user_id || !name || !instructions || !est_time_min) {
+    if (!user_id || !name || !description || !instructions || !est_time_min || !ingredients) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
