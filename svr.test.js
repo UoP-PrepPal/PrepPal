@@ -269,6 +269,58 @@ describe("Adding Recipes", () => {
     expect(res.statusCode).toBe(404);
   });
 
+  test("recipes should return error status 400 when adding a recipe with an invalid difficulty", async () => {
+    const agent = request.agent(app);
+
+    // Simulating user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Attempting to add a recipe with an invalid difficulty
+    const recipeData = {
+      user_id: 5,
+      name: "Impossible to Make Recipe",
+      description: "You physically cannot make this.",
+      instructions: "Just try it.",
+      est_time_min: 30,
+      ingredients: "Futility",
+      difficulty: "Impossible", // Not in ['Easy', 'Medium', 'Hard']
+    };
+
+    const res = await agent.post("/recipes").send(recipeData);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe("Invalid value for difficulty");
+  });
+
+  test("recipes should return error status 400 when adding a recipe with an invalid estimated time", async () => {
+    const agent = request.agent(app);
+
+    // Simulating user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Attempting to create recipe with invalid est_time_min
+    const recipeData = {
+      user_id: 5,
+      name: "Recipe with Invalid Time",
+      description: "You can approach, but never reach the end of this recipe.",
+      instructions: "Just keep going.",
+      est_time_min: 999, // Not in allowedPrepTimes
+      ingredients: "Time, Space",
+      difficulty: "Easy",
+    };
+
+    const res = await agent.post("/recipes").send(recipeData);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe("Invalid value for estimated time");
+  });
+
   test("recipes should return error status 400 when attempting to add a recipe with a missing name", async () => {
     const agent = request.agent(app);
 
