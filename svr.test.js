@@ -586,7 +586,7 @@ describe("Editing Recipes", () => {
     expect(res.body.error).toBe("Recipe not found or unauthorized");
   });
 
-  test("should return error status 400 when editing a recipe with an invalid difficulty", async () => {
+  test("recipes should return error status 400 when editing a recipe to have an invalid difficulty", async () => {
     const agent = request.agent(app);
 
     // Simulating user sign-in
@@ -626,7 +626,7 @@ describe("Editing Recipes", () => {
     await agent.delete(`/recipes/${recipeId}`);
   });
 
-    test("should return error status 400 when editing a recipe with an invalid estimated time", async () => {
+    test("recipes should return error status 400 when editing a recipe to have an invalid estimated time", async () => {
     const agent = request.agent(app);
 
     // Simulate user sign-in
