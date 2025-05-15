@@ -23,6 +23,9 @@ const dbPromise = open({
   driver: sqlite3.Database,
 });
 
+const allowedPrepTimes = [0, 5, 10, 15, 20, 30, 45, 60, 90, 120];
+const allowedDifficulties = ['Easy', 'Medium', 'Hard'];
+
 // Configure express-session middleware
 app.use(session({
   secret: process.env.SESSION_SECRET || 'default-secret-key', // Secret for signing session ID cookie
@@ -48,20 +51,30 @@ app.get('/', (req, res) => {
 app.post('/recipes', async (req, res) => {
   try {
     console.log('Request Body:', req.body); 
-    const { user_id, name, description, instructions, est_time_min, ingredients } = req.body;
+    const { user_id, name, description, instructions, est_time_min, ingredients, difficulty} = req.body;
 
     // Validate required fields
-    if (!user_id || !name || !description || !instructions || !est_time_min || !ingredients) {
+    if (!user_id || !name || !description || !instructions || !est_time_min || !ingredients || !difficulty) {
       return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Validate est_time_min
+    if (!allowedPrepTimes.includes(Number(est_time_min))) {
+      return res.status(400).json({ error: 'Invalid value for estimated time' });
+    }
+
+    // Validate difficulty
+    if (!allowedDifficulties.includes(difficulty)) {
+      return res.status(400).json({ error: 'Invalid value for difficulty' });
     }
 
     const db = await dbPromise;
 
     // Insert recipe into database
     const result = await db.run(
-      `INSERT INTO recipes (user_id, name, description, instructions, est_time_min, ingredients) 
-      VALUES (?, ?, ?, ?, ?, ?)`,
-      [user_id, name, description, instructions, est_time_min, ingredients]
+      `INSERT INTO recipes (user_id, name, description, instructions, est_time_min, ingredients, difficulty) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [user_id, name, description, instructions, est_time_min, ingredients, difficulty]
     );
     
     // Retrieve the last inserted row ID
@@ -268,16 +281,26 @@ app.put('/recipes/:id', async (req, res) => {
     }
 
     const recipeId = req.params.id;
-    const { name, description, instructions, est_time_min, ingredients } = req.body;
+    const { name, description, instructions, est_time_min, ingredients, difficulty } = req.body;
+
+    // Validate est_time_min
+    if (!allowedPrepTimes.includes(Number(est_time_min))) {
+      return res.status(400).json({ error: 'Invalid value for estimated time' });
+    }
+
+    // Validate difficulty
+    if (!allowedDifficulties.includes(difficulty)) {
+      return res.status(400).json({ error: 'Invalid value for difficulty' });
+    }
 
     const db = await dbPromise;
 
     // Update recipe fields in the database
     const result = await db.run(`
       UPDATE recipes
-      SET name = ?, description = ?, instructions = ?, est_time_min = ?, ingredients = ?
+      SET name = ?, description = ?, instructions = ?, est_time_min = ?, ingredients = ?, difficulty = ?,
       WHERE recipe_id = ? AND user_id = ?
-    `, [name, description, instructions, est_time_min, ingredients, recipeId, req.session.userId]);
+    `, [name, description, instructions, est_time_min, ingredients, difficulty, recipeId, req.session.userId]);
 
     if (result.changes === 0) {
       return res.status(404).json({ error: 'Recipe not found or unauthorized' });
