@@ -585,6 +585,86 @@ describe("Editing Recipes", () => {
     expect(res.statusCode).toBe(404);
     expect(res.body.error).toBe("Recipe not found or unauthorized");
   });
+
+  test("should return error status 400 when editing a recipe with an invalid difficulty", async () => {
+    const agent = request.agent(app);
+
+    // Simulating user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Adding a valid recipe to be edited
+    const recipeData = {
+      user_id: 5,
+      name: "Scaling Recipe",
+      description: "This recipe's about to get a hell of a lot harder.",
+      instructions: "Just try it.",
+      est_time_min: 30,
+      ingredients: "Nerves, Anxiety",
+      difficulty: "Easy",
+    };
+    const addRes = await agent.post("/recipes").send(recipeData);
+    const recipeId = addRes.body.id;
+
+    // Attempting to edit with invalid difficulty
+    const updatedRecipeData = {
+      name: "Scaling Recipe",
+      description: "This recipe's about to get a hell of a lot harder.",
+      instructions: "Just try it.",
+      est_time_min: 30,
+      ingredients: "Nerves, Anxiety",
+      difficulty: "Impossible", // Not in ['Easy', 'Medium', 'Hard']
+    };
+    const res = await agent.put(`/recipes/${recipeId}`).send(updatedRecipeData);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe("Invalid value for difficulty");
+
+    // Cleanup
+    await agent.delete(`/recipes/${recipeId}`);
+  });
+
+    test("should return error status 400 when editing a recipe with an invalid estimated time", async () => {
+    const agent = request.agent(app);
+
+    // Simulate user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Add a valid recipe first
+    const recipeData = {
+      user_id: 5,
+      name: "Extending Recipe",
+      description: "This little manauver is going to cost us 51 years.",
+      instructions: "Just keep going",
+      est_time_min: 30,
+      ingredients: "The Sands of Time",
+      difficulty: "Easy",
+    };
+    const addRes = await agent.post("/recipes").send(recipeData);
+    const recipeId = addRes.body.id;
+
+    // Attempt to edit with invalid est_time_min
+    const updatedRecipeData = {
+      name: "Extending Recipe",
+      description: "This little manauver is going to cost us 51 years.",
+      instructions: "Just keep going",
+      est_time_min: 999, // Not in allowedPrepTimes
+      ingredients: "The Sands of Time",
+      difficulty: "Easy",
+    };
+    const res = await agent.put(`/recipes/${recipeId}`).send(updatedRecipeData);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe("Invalid value for estimated time");
+
+    // Cleanup
+    await agent.delete(`/recipes/${recipeId}`);
+    });
 });
 
 describe("Deleting Recipes", () => {
