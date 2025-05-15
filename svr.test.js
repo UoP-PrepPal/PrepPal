@@ -238,6 +238,7 @@ describe("Adding Recipes", () => {
       instructions: "Mix ingredients and cook.",
       est_time_min: 30,
       ingredients: "Tests, Experiments",
+      difficulty: "Easy",
     };
 
     // Adding the recipe
@@ -284,6 +285,7 @@ describe("Adding Recipes", () => {
       instructions: "Ride into town on your horse with no name.",
       est_time_min: 20,
       ingredients: "Westerns, Cowboys",
+      difficulty: "Medium",
     };
 
     // Attempting to add the recipe
@@ -309,6 +311,7 @@ describe("Adding Recipes", () => {
       instructions: "Figure out some more details about this recipe.",
       est_time_min: 20,
       ingredients: "Vague, Unclear",
+      difficulty: "Hard",
     };
 
     // Attempting to add the recipe
@@ -334,6 +337,7 @@ describe("Adding Recipes", () => {
       description: "A recipe where you.. cook?",
       est_time_min: 20,
       ingredients: "Mystery, Secrets",
+      difficulty: "Hard",
     };
 
     // Attempting to add the recipe
@@ -359,6 +363,7 @@ describe("Adding Recipes", () => {
       description: "A recipe where you cook.",
       instructions: "Put it in the oven for...?",
       ingredients: "The concept of time",
+      difficulty: "Medium",
     };
 
     // Attempting to add the recipe
@@ -384,6 +389,33 @@ describe("Adding Recipes", () => {
       description: "A recipe where you cook.",
       instructions: "Put the ____ in the bowl with the ____, and stir.",
       est_time_min: 20,
+      difficulty: "Easy",
+    };
+
+    // Attempting to add the recipe
+    const res = await agent.post("/recipes").send(recipeData);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe("Missing required fields");
+  });
+
+  test("recipes should return error status 400 when attempting to add a recipe without a listed difficulty", async () => {
+    const agent = request.agent(app);
+
+    // Simulating a user sign-in
+    await agent.post("/signIn").send({
+      username: "testing",
+      email: "testing@testing.com",
+    });
+
+    // Invalid recipe data without a listed difficulty
+    const recipeData = {
+      user_id: 5,
+      name: "Recipe without a difficulty",
+      description: "A recipe where you cook really hard.",
+      instructions: "Go easy with it.",
+      est_time_min: 20,
+      ingredients: "Blood, Sweat, Tears",
     };
 
     // Attempting to add the recipe
@@ -412,6 +444,7 @@ describe("Editing Recipes", () => {
       instructions: "Edit.",
       est_time_min: 20,
       ingredients: "Prior ingredients",
+      difficulty: "Easy",
     };
 
     const addRes = await agent.post("/recipes").send(recipeData);
@@ -429,8 +462,9 @@ describe("Editing Recipes", () => {
       name: "Edited Recipe",
       description: "This recipe has been edited",
       instructions: "Validate the edits.",
-      est_time_min: 25,
+      est_time_min: 30,
       ingredients: "New ingredients",
+      difficulty: "Medium",
     };
 
     // Editing the recipe
@@ -465,6 +499,7 @@ describe("Editing Recipes", () => {
       instructions: "No instructions",
       est_time_min: 15,
       ingredients: "None",
+      difficulty: "Hard",
     };
 
     const res = await request(app).put(`/recipes/${recipeId}`).send(updatedRecipeData);
@@ -490,6 +525,7 @@ describe("Editing Recipes", () => {
       instructions: "No instructions",
       est_time_min: 10,
       ingredients: "None",
+      difficulty: "Easy",
     };
 
     const res = await agent.put(`/recipes/${nonExistentRecipeId}`).send(updatedRecipeData);
@@ -517,6 +553,7 @@ describe("Deleting Recipes", () => {
       instructions: "Delete.",
       est_time_min: 15,
       ingredients: "Nothing",
+      difficulty: "Easy",
     };
 
     const addRes = await agent.post("/recipes").send(recipeData);

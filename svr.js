@@ -283,6 +283,12 @@ app.put('/recipes/:id', async (req, res) => {
     const recipeId = req.params.id;
     const { name, description, instructions, est_time_min, ingredients, difficulty } = req.body;
 
+    // Validate required fields
+    if (!name || !description || !instructions || !est_time_min || !ingredients || !difficulty) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+
     // Validate est_time_min
     if (!allowedPrepTimes.includes(Number(est_time_min))) {
       return res.status(400).json({ error: 'Invalid value for estimated time' });
@@ -298,7 +304,7 @@ app.put('/recipes/:id', async (req, res) => {
     // Update recipe fields in the database
     const result = await db.run(`
       UPDATE recipes
-      SET name = ?, description = ?, instructions = ?, est_time_min = ?, ingredients = ?, difficulty = ?,
+      SET name = ?, description = ?, instructions = ?, est_time_min = ?, ingredients = ?, difficulty = ?
       WHERE recipe_id = ? AND user_id = ?
     `, [name, description, instructions, est_time_min, ingredients, difficulty, recipeId, req.session.userId]);
 
