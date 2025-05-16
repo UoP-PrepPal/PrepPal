@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
 app.post('/recipes', async (req, res) => {
   try {
     console.log('Request Body:', req.body); 
-    const { user_id, name, description, instructions, est_time_min, ingredients } = req.body;
+    const { user_id, name, description, instructions, est_time_min, ingredients, difficulty } = req.body;
 
     // Validate required fields
     if (!user_id || !name || !instructions || !est_time_min) {
@@ -59,9 +59,9 @@ app.post('/recipes', async (req, res) => {
 
     // Insert recipe into database
     const result = await db.run(
-      `INSERT INTO recipes (user_id, name, description, instructions, est_time_min, ingredients) 
-      VALUES (?, ?, ?, ?, ?, ?)`,
-      [user_id, name, description, instructions, est_time_min, ingredients]
+      `INSERT INTO recipes (user_id, name, description, instructions, est_time_min, ingredients, difficulty) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [user_id, name, description, instructions, est_time_min, ingredients, difficulty]
     );
     
     // Retrieve the last inserted row ID
